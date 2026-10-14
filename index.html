@@ -1,225 +1,195 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- 📝 غيّر عنوان الامتحان والوصف هنا -->
-    <title>حل المعادلات التربيعية (الثلاثي البسيط) | Mr. Mohammed Hesham</title>
-    <meta name="description" content="امتحان تفاعلي شامل - منصة مستر محمد هشام">
-    <meta name="author" content="Mr. Mohammed Hesham">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Cairo', sans-serif; }
-        body.en-mode { font-family: 'Inter', sans-serif; }
-        .correct { background-color: #dcfce7 !important; border-color: #16a34a !important; }
-        .incorrect { background-color: #fee2e2 !important; border-color: #dc2626 !important; }
-        .timer-warning { color: #dc2626 !important; animation: pulse 1s infinite; }
-        @keyframes pulse { 50% { opacity: 0.7; } }
-        @media print { .no-print { display: none !important; } }
-        .success-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.875rem; }
-        .grade-excellent { background: #dcfce7; color: #166534; }
-        .grade-good { background: #fef3c7; color: #92400e; }
-        .grade-pass { background: #dbeafe; color: #1e40af; }
-        .grade-fail { background: #fee2e2; color: #991b1b; }
-        .lang-switch {
-            position: fixed; top: 16px; left: 16px; z-index: 100;
-            background: white; padding: 6px; border-radius: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: flex; gap: 4px;
-            border: 2px solid #0d9488;
-        }
-        [dir="ltr"] .lang-switch { left: auto; right: 16px; }
-        .lang-btn {
-            padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: bold;
-            transition: all 0.3s; border: none; font-size: 0.875rem;
-            background: transparent; color: #6b7280;
-        }
-        .lang-btn.active { background: #0d9488; color: white; box-shadow: 0 2px 6px rgba(13,148,136,0.4); }
-        .lang-btn:hover:not(.active) { background: #f0fdfa; color: #0d9488; }
-        .shuffle-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #0d9488, #0f766e);
-            color: white; padding: 4px 12px; border-radius: 20px;
-            font-size: 0.75rem; font-weight: bold; margin-right: 8px;
-            animation: pulse 2s infinite;
-        }
-        .math-display {
-            display: inline-block; direction: ltr;
-            font-family: 'Times New Roman', 'Cambria Math', serif;
-            font-size: 1.2em; font-style: italic;
-            padding: 2px 8px; background: #f0fdfa;
-            border-radius: 6px; margin: 2px;
-            color: #0f766e; font-weight: 600; letter-spacing: 0.5px;
-        }
-        .save-indicator {
-            position: fixed; bottom: 20px; left: 20px; z-index: 200;
-            background: #10b981; color: white; padding: 8px 16px;
-            border-radius: 20px; font-size: 0.8rem; font-weight: bold;
-            opacity: 0; transition: opacity 0.3s; pointer-events: none;
-            box-shadow: 0 4px 12px rgba(16,185,129,0.4);
-        }
-        .save-indicator.show { opacity: 1; }
-        .formula-box {
-            background: #f0fdfa; border: 2px solid #14b8a6;
-            border-radius: 8px; padding: 12px; margin: 10px 0;
-            font-family: 'Times New Roman', serif;
-            direction: ltr; text-align: center;
-        }
-        .exam-diagram-container {
-            display: flex; justify-content: center; align-items: center;
-            margin: 14px 0; width: 100%; overflow-x: auto;
-        }
-        .exam-diagram {
-            max-width: 100%; height: auto; margin: 8px auto; display: block;
-            background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 12px;
-            padding: 10px; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-        }
-        .exam-table-container {
-            width: 100%; overflow-x: auto; margin: 12px 0;
-        }
-        .exam-table {
-            width: 100%; max-width: 520px; margin: 0 auto;
-            border-collapse: collapse; font-size: 0.88rem; text-align: center;
-            background-color: #ffffff; border-radius: 8px; overflow: hidden;
-            border: 1.5px solid #cbd5e1;
-        }
-        .exam-table th {
-            background-color: #f0fdfa; color: #0f766e; font-weight: bold;
-            padding: 8px 12px; border: 1px solid #ccfbf1;
-        }
-        .exam-table td {
-            padding: 6px 12px; border: 1px solid #e2e8f0; color: #1e293b;
-            font-family: 'Times New Roman', serif;
-        }
-        .exam-table tr:nth-child(even) { background-color: #f8fafc; }
-        .q-meta-badges {
-            display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; align-items: center;
-        }
-        .q-category-pill {
-            display: inline-flex; align-items: center; gap: 4px;
-            background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd;
-            font-size: 0.75rem; font-weight: 700; padding: 2px 10px; border-radius: 9999px;
-        }
-        .q-law-pill {
-            display: inline-flex; align-items: center; gap: 4px;
-            background: #fef3c7; color: #b45309; border: 1px solid #fde68a;
-            font-size: 0.75rem; font-weight: 700; padding: 2px 10px; border-radius: 9999px;
-            font-family: 'Times New Roman', 'Cambria Math', serif; direction: ltr;
-        }
-        .q-type-interactive {
-            background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0;
-        }
-        .q-type-graph {
-            background: #ede9fe; color: #6d28d9; border: 1px solid #ddd6fe;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📐 التبسيط وقوانين الأسس - الصف العاشر | Mr. Mohammed Hesham</title>
+<meta name="description" content="امتحان تفاعلي شامل عن التبسيط وقوانين الأسس والدوال أحادية الحد - رياضيات الصف 10">
+<meta name="author" content="Mr. Mohammed Hesham">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body { font-family: 'Cairo', sans-serif; }
+body.en-mode { font-family: 'Inter', sans-serif; }
+.arabic-math { font-family: 'Amiri', 'Cairo', serif; }
+.correct { background-color: #dcfce7 !important; border-color: #16a34a !important; }
+.incorrect { background-color: #fee2e2 !important; border-color: #dc2626 !important; }
+.timer-warning { color: #dc2626 !important; animation: pulse 1s infinite; }
+@keyframes pulse { 50% { opacity: 0.7; } }
+@media print { .no-print { display: none !important; } }
+.success-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.875rem; }
+.grade-excellent { background: #dcfce7; color: #166534; }
+.grade-good { background: #fef3c7; color: #92400e; }
+.grade-pass { background: #dbeafe; color: #1e40af; }
+.grade-fail { background: #fee2e2; color: #991b1b; }
+.lang-switch {
+position: fixed; top: 16px; left: 16px; z-index: 100;
+background: white; padding: 6px; border-radius: 30px;
+box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: flex; gap: 4px;
+border: 2px solid #0891b2;
+}
+[dir="ltr"] .lang-switch { left: auto; right: 16px; }
+.lang-btn {
+padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: bold;
+transition: all 0.3s; border: none; font-size: 0.875rem;
+background: transparent; color: #6b7280;
+}
+.lang-btn.active { background: #0891b2; color: white; box-shadow: 0 2px 6px rgba(8,145,178,0.4); }
+.lang-btn:hover:not(.active) { background: #ecfeff; color: #0891b2; }
+.shuffle-badge {
+display: inline-block;
+background: linear-gradient(135deg, #0891b2, #0e7490);
+color: white; padding: 4px 12px; border-radius: 20px;
+font-size: 0.75rem; font-weight: bold; margin-right: 8px;
+}
+.math-display {
+display: inline-block; direction: ltr;
+font-family: 'Amiri', 'Times New Roman', serif;
+font-size: 1.2em; font-style: italic;
+padding: 2px 8px; background: #ecfeff;
+border-radius: 6px; margin: 2px;
+color: #0e7490; font-weight: 600; letter-spacing: 0.5px;
+}
+.save-indicator {
+position: fixed; bottom: 20px; left: 20px; z-index: 200;
+background: #10b981; color: white; padding: 8px 16px;
+border-radius: 20px; font-size: 0.8rem; font-weight: bold;
+opacity: 0; transition: opacity 0.3s; pointer-events: none;
+box-shadow: 0 4px 12px rgba(16,185,129,0.4);
+}
+.save-indicator.show { opacity: 1; }
+.formula-box {
+background: #ecfeff; border: 2px solid #06b6d4;
+border-radius: 8px; padding: 12px; margin: 10px 0;
+font-family: 'Amiri', serif;
+direction: ltr; text-align: center;
+}
+.svg-graph {
+display: block;
+margin: 12px auto;
+background: white;
+border: 2px solid #e5e7eb;
+border-radius: 12px;
+padding: 8px;
+box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.graph-container { text-align: center; margin: 10px 0; }
+.module-badge {
+display: inline-block;
+padding: 4px 16px;
+border-radius: 20px;
+font-weight: bold;
+font-size: 0.85rem;
+margin-bottom: 8px;
+}
+.module-1 { background: #cffafe; color: #155e75; }
+.module-2 { background: #fef3c7; color: #92400e; }
+.module-3 { background: #fce7f3; color: #9f1239; }
+.module-4 { background: #ecfdf5; color: #065f46; }
+.module-5 { background: #ede9fe; color: #5b21b6; }
+</style>
 </head>
-<body class="bg-gradient-to-br from-teal-50 to-emerald-50 text-gray-800 p-4 md:p-8 min-h-screen">
+<body class="bg-gradient-to-br from-cyan-50 to-teal-50 text-gray-800 p-4 md:p-8 min-h-screen">
 
-    <div class="lang-switch no-print">
-        <button class="lang-btn active" onclick="setLanguage('ar')" id="btn-ar">عربي</button>
-        <button class="lang-btn" onclick="setLanguage('en')" id="btn-en">EN</button>
-    </div>
+<div class="lang-switch no-print">
+<button class="lang-btn active" onclick="setLanguage('ar')" id="btn-ar">عربي</button>
+<button class="lang-btn" onclick="setLanguage('en')" id="btn-en">EN</button>
+</div>
 
-    <div id="saveIndicator" class="save-indicator"> <span data-ar="تم الحفظ" data-en="Saved">تم الحفظ</span></div>
+<div id="saveIndicator" class="save-indicator">💾 <span data-ar="تم الحفظ" data-en="Saved">تم الحفظ</span></div>
 
-    <div id="timer-container" class="max-w-4xl mx-auto mb-4 text-center no-print">
-        <div class="bg-white p-4 rounded-2xl shadow-md inline-block border-2 border-teal-100">
-            <span class="text-gray-600 ml-2" data-ar="الوقت المتبقي:" data-en="Time Remaining:">⏰ الوقت المتبقي:</span>
-            <span id="timer" class="text-2xl font-bold text-teal-600 font-mono">30:00</span>
-            <span class="shuffle-badge" data-ar="🎲 أسئلة عشوائية" data-en="🎲 Random Questions">🎲 أسئلة عشوائية</span>
-        </div>
-    </div>
+<div id="timer-container" class="max-w-5xl mx-auto mb-4 text-center no-print">
+<div class="bg-white p-4 rounded-2xl shadow-md inline-block border-2 border-cyan-100">
+<span class="text-gray-600 ml-2" data-ar="⏰ الوقت المتبقي:" data-en="⏰ Time Remaining:">⏰ الوقت المتبقي:</span>
+<span id="timer" class="text-2xl font-bold text-cyan-700 font-mono">75:00</span>
+<span class="shuffle-badge" data-ar="🎲 أسئلة عشوائية" data-en="🎲 Random Questions"> أسئلة عشوائية</span>
+</div>
+</div>
 
-    <div class="max-w-4xl mx-auto mb-6 flex flex-wrap gap-3 justify-center no-print">
-        <button onclick="toggleAnswers()" class="bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded-xl font-medium transition shadow cursor-pointer" data-ar="👀 إظهار / إخفاء الإجابات" data-en="👀 Show / Hide Answers">👀 إظهار / إخفاء الإجابات</button>
-        <button onclick="window.print()" class="bg-gray-700 hover:bg-gray-900 text-white px-5 py-2 rounded-xl font-medium transition shadow cursor-pointer" data-ar="🖨️ طباعة" data-en="🖨️ Print">🖨️ طباعة</button>
-        <button onclick="reshuffleExam()" class="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white px-5 py-2 rounded-xl font-medium transition shadow cursor-pointer" data-ar="🔄 أسئلة جديدة" data-en="🔄 New Questions">🔄 أسئلة جديدة</button>
-        <button onclick="clearProgress()" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-xl font-medium transition shadow cursor-pointer" data-ar="🗑️ مسح التقدم" data-en="🗑️ Clear Progress">🗑️ مسح التقدم</button>
-    </div>
+<div class="max-w-5xl mx-auto mb-6 flex flex-wrap gap-3 justify-center no-print">
+<button onclick="toggleAnswers()" class="bg-cyan-700 hover:bg-cyan-800 text-white px-5 py-2 rounded-xl font-medium transition shadow cursor-pointer" data-ar="👀 إظهار / إخفاء الإجابات" data-en="👀 Show / Hide Answers">👀 إظهار / إخفاء الإجابات</button>
+<button onclick="window.print()" class="bg-gray-700 hover:bg-gray-900 text-white px-5 py-2 rounded-xl font-medium transition shadow cursor-pointer" data-ar="🖨️ طباعة" data-en="🖨️ Print">🖨️ طباعة</button>
+<button onclick="reshuffleExam()" class="bg-gradient-to-r from-cyan-700 to-teal-600 hover:from-cyan-800 hover:to-teal-700 text-white px-5 py-2 rounded-xl font-medium transition shadow cursor-pointer" data-ar="🔄 أسئلة جديدة" data-en="🔄 New Questions">🔄 أسئلة جديدة</button>
+<button onclick="clearProgress()" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-xl font-medium transition shadow cursor-pointer" data-ar="🗑️ مسح التقدم" data-en="🗑️ Clear Progress">🗑️ مسح التقدم</button>
+</div>
 
-    <!-- 📝 عناوين الامتحان والوصف المعتمد لمادتي الفيزياء والرياضيات -->
-    <header class="max-w-4xl mx-auto bg-white p-6 rounded-2xl shadow-lg mb-8 border-4 border-teal-400">
-        <div class="text-center">
-            <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2" data-ar="📐 حل المعادلات التربيعية (الثلاثي البسيط)" data-en="📐 Interactive Exam: STEM Assessment">📐 حل المعادلات التربيعية (الثلاثي البسيط)</h1>
-            <h2 class="text-lg text-teal-600 font-semibold" data-ar="مادة العلوم والتطبيقات" data-en="Grade &amp; Subject: Assessment Level">مادة العلوم والتطبيقات</h2>
-            <p class="text-sm text-gray-600 mt-2" data-ar="امتحان تفاعلي تطبيقي: مسائل حسابية دقيقة، معادلات وقوانين، رسوم بيانية SVG، ودوائر كهربية مع تصحيح فوري" data-en="Interactive STEM exam: Quantitative problems, formulas, SVG diagrams, circuits, and instant grading">امتحان تفاعلي تطبيقي: مسائل حسابية دقيقة، معادلات وقوانين، رسوم بيانية SVG، ودوائر كهربية مع تصحيح فوري</p>
-            <p class="text-xs text-green-600 mt-2 font-semibold" data-ar="💾 يتم حفظ تقدمك تلقائياً" data-en="💾 Your progress is saved automatically">💾 يتم حفظ تقدمك تلقائياً</p>
-        </div>
-        <div class="mt-4 flex flex-wrap justify-center gap-4 text-sm text-gray-600">
-            <span><span data-ar="📅 التاريخ:" data-en="📅 Date:">📅 التاريخ:</span> <input type="text" id="examDate" class="border-b-2 border-teal-300 bg-transparent w-28 text-center"></span>
-            <span><span data-ar="😊 الاسم:" data-en="😊 Name:">😊 الاسم:</span> <input type="text" id="studentName" class="border-b-2 border-teal-300 bg-transparent w-32 text-center" placeholder="اكتب اسمك"></span>
-            <span><span data-ar="🏫 الشعبة:" data-en="🏫 Class:">🏫 الشعبة:</span> <input type="text" id="studentClass" class="border-b-2 border-teal-300 bg-transparent w-28 text-center" placeholder="الشعبة"></span>
-            <span><span data-ar="⏰ المدة: 30 دقيقة" data-en="⏰ Duration: 30 min">⏰ المدة: 60 دقيقة</span></span>
-            <span><span data-ar="📊 المجموع: 100 درجة" data-en="📊 Total: 100 pts">📊 المجموع: 100 درجة</span></span>
-        </div>
-    </header>
+<header class="max-w-5xl mx-auto bg-white p-6 rounded-2xl shadow-lg mb-8 border-4 border-cyan-500">
+<div class="text-center">
+<div class="inline-block bg-cyan-700 text-white px-4 py-1 rounded-full text-xs font-bold mb-2">MATH GRADE 10</div>
+<h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2" data-ar="📐 التبسيط وقوانين الأسس" data-en="📐 Simplification & Exponent Laws">📐 التبسيط وقوانين الأسس</h1>
+<h2 class="text-lg text-cyan-700 font-semibold" data-ar="الصف العاشر العام (رياضيات)" data-en="Grade 10 General (Mathematics)">الصف العاشر العام (رياضيات)</h2>
+<p class="text-sm text-gray-600 mt-2" data-ar="الدوال أحادية الحد، قوانين الأسس، التبسيط، المساحات الهندسية" data-en="Monomials, Exponent Laws, Simplification, Geometric Areas">الدوال أحادية الحد، قوانين الأسس، التبسيط، المساحات الهندسية</p>
+<p class="text-xs text-green-600 mt-2 font-semibold" data-ar="💾 يتم حفظ تقدمك تلقائياً - 30 سؤالاً في 5 أقسام" data-en="💾 Your progress is saved automatically - 30 questions in 5 sections">💾 يتم حفظ تقدمك تلقائياً - 30 سؤالاً في 5 أقسام</p>
+</div>
+<div class="mt-4 flex flex-wrap justify-center gap-4 text-sm text-gray-600">
+<span><span data-ar="📅 التاريخ:" data-en="📅 Date:">📅 التاريخ:</span> <input type="text" id="examDate" class="border-b-2 border-cyan-300 bg-transparent w-28 text-center"></span>
+<span><span data-ar="😊 الاسم:" data-en="😊 Name:">😊 الاسم:</span> <input type="text" id="studentName" class="border-b-2 border-cyan-300 bg-transparent w-32 text-center" placeholder="اكتب اسمك"></span>
+<span><span data-ar="🏫 الشعبة:" data-en="🏫 Class:"> الشعبة:</span> <input type="text" id="studentClass" class="border-b-2 border-cyan-300 bg-transparent w-28 text-center" placeholder="الشعبة"></span>
+<span data-ar="⏰ المدة: 75 دقيقة" data-en="⏰ Duration: 75 min">⏰ المدة: 75 دقيقة</span>
+<span data-ar=" المجموع: 100 درجة" data-en="📊 Total: 100 pts">📊 المجموع: 100 درجة</span>
+</div>
+</header>
 
-    <!-- 📝 صيغ وقوانين أساسية للامتحان -->
-    <div class="max-w-4xl mx-auto mb-6 bg-white p-4 rounded-xl shadow-md border-2 border-teal-200 no-print" id="notes-formula-box">
-        <h3 class="font-bold text-lg mb-3 text-teal-700 text-center" data-ar="📐 القوانين والصيغ الرياضية والفيزيائية الهامة" data-en="📐 Key Mathematical & Physical Formulas">📐 القوانين والصيغ الرياضية والفيزيائية الهامة</h3>
-        <div class="grid md:grid-cols-2 gap-3 text-sm" id="notes-content">
-            <div class="formula-box"><strong>قوانين كمية المادة والكتلة:</strong> $n = \frac{m}{M_w} \quad , \quad M = \frac{n}{V_{(L)}} \quad , \quad P V = n R T$</div>
-            <div class="formula-box"><strong>قوانين التخفيف والأس الهيدروجيني:</strong> $M_1 V_1 = M_2 V_2 \quad , \quad pH = -\log[H^+] \quad , \quad pH + pOH = 14$</div>
-        </div>
-            <div class="formula-box"><strong>قوانين الكهرباء والتفاضل:</strong> $V = I cdot R quad , quad rac{d}{dx}(x^n) = n x^{n-1} quad , quad int x^n dx = rac{x^{n+1}}{n+1}$</div>
-        </div>
-    </div>
+<div class="max-w-5xl mx-auto mb-6 bg-white p-4 rounded-xl shadow-md border-2 border-cyan-200 no-print">
+<h3 class="font-bold text-lg mb-3 text-cyan-800 text-center" data-ar=" القوانين الأساسية" data-en="📐 Key Rules">📐 القوانين الأساسية</h3>
+<div class="grid md:grid-cols-3 gap-3 text-sm">
+<div class="formula-box"><strong>Product Rule:</strong> x · xᵇ = xᵃ⁺ᵇ</div>
+<div class="formula-box"><strong>Power Rule:</strong> (xᵃ)ᵇ = xᵇ</div>
+<div class="formula-box"><strong>Monomial:</strong> واحد حد فقط (no + or -)</div>
+<div class="formula-box"><strong>Triangle Area:</strong> A = ½ × b × h</div>
+<div class="formula-box"><strong>Coefficient:</strong> العدد أمام المتغير</div>
+<div class="formula-box"><strong>Degree:</strong> مجموع الأسس</div>
+</div>
+</div>
 
-    <main class="max-w-4xl mx-auto space-y-8" id="exam-content"></main>
+<main class="max-w-5xl mx-auto space-y-8" id="exam-content"></main>
 
-    <div class="text-center no-print pb-8 mt-8">
-        <button onclick="gradeExam()" class="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white text-lg px-10 py-4 rounded-2xl font-bold shadow-xl transition transform hover:scale-105 cursor-pointer" data-ar="🎯 صحح إجاباتي!" data-en="🎯 Grade My Answers!">🎯 صحح إجاباتي!</button>
-    </div>
+<div class="text-center no-print pb-8 mt-8">
+<button onclick="gradeExam()" class="bg-gradient-to-r from-cyan-700 to-teal-600 hover:from-cyan-800 hover:to-teal-700 text-white text-lg px-10 py-4 rounded-2xl font-bold shadow-xl transition transform hover:scale-105 cursor-pointer" data-ar="🎯 صحح إجاباتي!" data-en="🎯 Grade My Answers!">🎯 صحح إجاباتي!</button>
+</div>
 
-    <div id="results-panel" class="max-w-4xl mx-auto mt-8 bg-white p-8 rounded-2xl shadow-2xl border-4 border-teal-400 hidden no-print">
-        <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center" data-ar="🏆 نتيجتك يا بطل! 🏆" data-en="🏆 Your Results, Champion! 🏆">🏆 نتيجتك يا بطل! 🏆</h2>
-        <div class="grid md:grid-cols-3 gap-4 mb-6">
-            <div class="bg-teal-50 p-4 rounded-xl text-center"><p data-ar="😊 الاسم" data-en="😊 Name">😊 الاسم</p><p id="res-name" class="font-bold text-xl text-teal-700">-</p></div>
-            <div class="bg-emerald-50 p-4 rounded-xl text-center"><p data-ar="📅 التاريخ" data-en="📅 Date">📅 التاريخ</p><p id="res-date" class="font-bold text-xl text-emerald-700">-</p></div>
-            <div class="bg-teal-50 p-4 rounded-xl text-center"><p data-ar="🌟 المجموع" data-en="🌟 Score">🌟 المجموع</p><p id="res-total" class="font-bold text-3xl text-teal-600">0 / 100</p></div>
-        </div>
-        <div class="text-center mb-6">
-            <span id="success-badge" class="success-badge grade-excellent">-</span>
-            <p id="success-percent" class="text-4xl font-bold text-teal-600 mt-2">0%</p>
-            <p class="text-sm text-gray-500" data-ar="نسبة النجاح" data-en="Success Rate">نسبة النجاح</p>
-        </div>
-        <div class="bg-gray-50 p-6 rounded-xl mb-6">
-            <h3 class="font-bold text-lg mb-4 text-gray-800" data-ar="📊 أدائك في كل قسم:" data-en="📊 Your Performance:">📊 أدائك في كل قسم:</h3>
-            <div class="space-y-3" id="sections-performance"></div>
-        </div>
-        <div class="text-center mb-6">
-            <button id="sendEmailBtn" onclick="sendResultsToEmail()" class="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white text-lg px-8 py-3 rounded-2xl font-bold shadow-xl transition transform hover:scale-105 cursor-pointer" data-ar="📧 أرسل النتيجة للمعلم" data-en="📧 Send Results to Teacher">📧 أرسل النتيجة للمعلم</button>
-            <p id="emailStatus" class="text-sm mt-2 text-center font-medium"></p>
-        </div>
-        <div class="flex gap-3 justify-center">
-            <button onclick="window.print()" class="bg-gray-700 text-white px-6 py-3 rounded-xl font-semibold" data-ar="🖨️ طباعة النتيجة" data-en="🖨️ Print Results">🖨️ طباعة النتيجة</button>
-        </div>
-    </div>
+<div id="results-panel" class="max-w-5xl mx-auto mt-8 bg-white p-8 rounded-2xl shadow-2xl border-4 border-cyan-500 hidden no-print">
+<h2 class="text-3xl font-bold text-gray-900 mb-6 text-center" data-ar=" نتيجتك يا بطل! 🏆" data-en="🏆 Your Results, Champion! 🏆">🏆 نتيجتك يا بطل! 🏆</h2>
+<div class="grid md:grid-cols-3 gap-4 mb-6">
+<div class="bg-cyan-50 p-4 rounded-xl text-center"><p data-ar="😊 الاسم" data-en="😊 Name">😊 الاسم</p><p id="res-name" class="font-bold text-xl text-cyan-700">-</p></div>
+<div class="bg-teal-50 p-4 rounded-xl text-center"><p data-ar="📅 التاريخ" data-en=" Date">📅 التاريخ</p><p id="res-date" class="font-bold text-xl text-teal-700">-</p></div>
+<div class="bg-cyan-50 p-4 rounded-xl text-center"><p data-ar="🌟 المجموع" data-en="🌟 Score"> المجموع</p><p id="res-total" class="font-bold text-3xl text-cyan-700">0 / 100</p></div>
+</div>
+<div class="text-center mb-6">
+<span id="success-badge" class="success-badge grade-excellent">-</span>
+<p id="success-percent" class="text-4xl font-bold text-cyan-700 mt-2">0%</p>
+<p class="text-sm text-gray-500" data-ar="نسبة النجاح" data-en="Success Rate">نسبة النجاح</p>
+</div>
+<div class="bg-gray-50 p-6 rounded-xl mb-6">
+<h3 class="font-bold text-lg mb-4 text-gray-800" data-ar=" أدائك في كل قسم:" data-en=" Your Performance:">📊 أدائك في كل قسم:</h3>
+<div class="space-y-3" id="sections-performance"></div>
+</div>
+<div class="text-center mb-6">
+<button id="sendEmailBtn" onclick="sendResultsToEmail()" class="bg-gradient-to-r from-cyan-700 to-teal-600 text-white text-lg px-8 py-3 rounded-2xl font-bold shadow-xl transition cursor-pointer" data-ar="📧 أرسل النتيجة للمعلم" data-en=" Send Results to Teacher">📧 أرسل النتيجة للمعلم</button>
+<p id="emailStatus" class="text-sm mt-2 text-center font-medium"></p>
+</div>
+<div class="flex gap-3 justify-center">
+<button onclick="window.print()" class="bg-gray-700 text-white px-6 py-3 rounded-xl font-semibold" data-ar="🖨️ طباعة النتيجة" data-en="️ Print Results">🖨️ طباعة النتيجة</button>
+</div>
+</div>
 
-    <footer class="max-w-4xl mx-auto mt-10 mb-8 text-center text-gray-500 text-sm no-print">
-        © <span data-ar="حل المعادلات التربيعية (الثلاثي البسيط)" data-en="Interactive Exam: STEM Assessment">حل المعادلات التربيعية (الثلاثي البسيط)</span> | Mr. Mohammed Hesham 📐
-    </footer>
+<footer class="max-w-5xl mx-auto mt-10 mb-8 text-center text-gray-500 text-sm no-print">
+© <span data-ar="التبسيط وقوانين الأسس - الصف 10" data-en="Simplification & Exponents - Grade 10">التبسيط وقوانين الأسس - الصف 10</span> | Mr. Mohammed Hesham 📐
+</footer>
 
 <script>
-// ==================== إعدادات EmailJS ====================
 const PUBLIC_KEY = "Rb3Lq8tXaFmc5YHUH";
 const SERVICE_ID = "service_w15m64i";
 const TEMPLATE_ID = "template_5b0u2tq";
 const TARGET_EMAIL = "mohammedhesham872@gmail.com";
 emailjs.init(PUBLIC_KEY);
 
-// ==================== 💾 نظام حفظ التقدم ====================
-// 📝 غيّر اسم المفتاح ليكون فريداً لكل امتحان جديد
-const STORAGE_KEY = 'hesham_exam_mujibzqa'; 
-
-// ⚠️ هام: يجب أن تتطابق هذه الأرقام مع عدد الأسئلة والأقسام التي تضعها في originalExamData بالأسفل
-const TOTAL_TIME = 1800; // الوقت بالثواني (3600 = 60 دقيقة)
-const TOTAL_QUESTIONS = 20; // العدد الكلي للأسئلة
-const TOTAL_SECTIONS = 5; // العدد الكلي للأقسام
-const QUESTIONS_PER_SECTION = 4; // عدد الأسئلة في كل قسم (لحساب الدرجات)
+const STORAGE_KEY = 'simplification_exponents_grade10_v1';
+const TOTAL_TIME = 4500;
+const TOTAL_QUESTIONS = 30;
+const TOTAL_SECTIONS = 5;
+const QUESTIONS_PER_SECTION = 6;
 
 let currentSeed = null;
 let answersVisible = false;
@@ -237,54 +207,32 @@ let rng = null;
 
 function showSaveIndicator() {
     const indicator = document.getElementById('saveIndicator');
-    if (!indicator) return;
     indicator.classList.add('show');
     if (saveIndicatorTimeout) clearTimeout(saveIndicatorTimeout);
     saveIndicatorTimeout = setTimeout(() => indicator.classList.remove('show'), 1500);
-}
-
-const _memoryStore = {};
-function safeStorageGet(k) {
-    try {
-        if (typeof window !== 'undefined' && window.localStorage) return window.localStorage.getItem(k);
-    } catch(e) {}
-    return _memoryStore[k] || null;
-}
-function safeStorageSet(k, v) {
-    try {
-        if (typeof window !== 'undefined' && window.localStorage) { window.localStorage.setItem(k, v); return; }
-    } catch(e) {}
-    _memoryStore[k] = String(v);
-}
-function safeStorageRemove(k) {
-    try {
-        if (typeof window !== 'undefined' && window.localStorage) { window.localStorage.removeItem(k); return; }
-    } catch(e) {}
-    delete _memoryStore[k];
 }
 
 function saveState(showIndicator = true) {
     try {
         const state = {
             seed: currentSeed, lang: currentLang,
-            studentName: document.getElementById('studentName')?.value || '',
-            studentClass: document.getElementById('studentClass')?.value || '',
-            examDate: document.getElementById('examDate')?.value || '',
+            studentName: document.getElementById('studentName').value,
+            studentClass: document.getElementById('studentClass').value,
+            examDate: document.getElementById('examDate').value,
             answers: getSelectedAnswers(),
             timeRemaining: timeRemaining,
             answersVisible: answersVisible, savedAt: Date.now()
         };
-        safeStorageSet(STORAGE_KEY, JSON.stringify(state));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         if (showIndicator) showSaveIndicator();
-    } catch (e) {}
+    } catch (e) { console.error('خطأ في الحفظ:', e); }
 }
 
 function loadState() {
     try {
-        const saved = safeStorageGet(STORAGE_KEY);
-        if (saved) return JSON.parse(saved);
-    } catch (e) {}
-    return null;
+        const saved = localStorage.getItem(STORAGE_KEY);
+        return saved ? JSON.parse(saved) : null;
+    } catch (e) { return null; }
 }
 
 function getSelectedAnswers() {
@@ -305,17 +253,14 @@ function restoreAnswers(answers) {
 }
 
 function clearProgress() {
-    const confirmMsg = currentLang === 'ar' ? '⚠️ هل أنت متأكد من مسح كل التقدم؟' : '⚠️ Are you sure you want to clear all progress?';
-    if (confirm(confirmMsg)) { safeStorageRemove(STORAGE_KEY); location.reload(); }
+    const msg = currentLang === 'ar' ? '️ هل أنت متأكد من مسح كل التقدم؟' : '⚠️ Clear all progress?';
+    if (confirm(msg)) { localStorage.removeItem(STORAGE_KEY); location.reload(); }
 }
 
 function setupAnswerListeners() {
-    const content = document.getElementById('exam-content');
-    if (content) {
-        content.addEventListener('change', (e) => {
-            if (e.target.type === 'radio') saveState();
-        });
-    }
+    document.getElementById('exam-content').addEventListener('change', (e) => {
+        if (e.target.type === 'radio') saveState();
+    });
 }
 
 function setupInputListeners() {
@@ -328,643 +273,450 @@ function setupInputListeners() {
     });
 }
 
-// =====================================================================
-// 📝 بنك الأسئلة التفاعلية لمادتي الفيزياء والرياضيات (20 مسألة عبر 5 أقسام)
-// =====================================================================
+// ==================== SVG Diagrams ====================
+const svgGraphs = {
+    monomial_check: `<svg class="svg-graph" width="400" height="220" viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="210" rx="12" fill="#cffafe" stroke="#0891b2" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#155e75" font-weight="bold">📐 الدوال أحادية الحد - Monomials</text>
+        <rect x="20" y="50" width="170" height="50" rx="6" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="105" y="80" text-anchor="middle" font-size="12" fill="#065f46" font-weight="bold">✓ Monomials</text>
+        <text x="105" y="95" text-anchor="middle" font-size="11" fill="#065f46">3a⁴, 5k/10, 122</text>
+        <rect x="210" y="50" width="170" height="50" rx="6" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+        <text x="295" y="80" text-anchor="middle" font-size="12" fill="#991b1b" font-weight="bold">✗ Not Monomials</text>
+        <text x="295" y="95" text-anchor="middle" font-size="11" fill="#991b1b">2c+2, 6m+3n</text>
+        <text x="200" y="135" text-anchor="middle" font-size="12" fill="#155e75">Monomial = واحد حد فقط (no + or -)</text>
+        <text x="200" y="160" text-anchor="middle" font-size="11" fill="#155e75">Coefficient × Variable(s) with whole number exponents</text>
+        <text x="200" y="185" text-anchor="middle" font-size="11" fill="#155e75">No variables in denominator</text>
+        <text x="200" y="205" text-anchor="middle" font-size="10" fill="#155e75">Degree = sum of all exponents</text>
+    </svg>`,
+    
+    exponent_rules: `<svg class="svg-graph" width="400" height="260" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="250" rx="12" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#92400e" font-weight="bold">📐 قوانين الأسس - Exponent Rules</text>
+        <rect x="20" y="45" width="170" height="45" rx="6" fill="#fde68a" stroke="#f59e0b" stroke-width="2"/>
+        <text x="105" y="72" text-anchor="middle" font-size="11" fill="#92400e" font-family="'Amiri', serif">xᵃ · xᵇ = xᵃ⁺</text>
+        <rect x="210" y="45" width="170" height="45" rx="6" fill="#fde68a" stroke="#f59e0b" stroke-width="2"/>
+        <text x="295" y="72" text-anchor="middle" font-size="11" fill="#92400e" font-family="'Amiri', serif">(xᵃ)ᵇ = xᵃᵇ</text>
+        <rect x="20" y="100" width="170" height="45" rx="6" fill="#fde68a" stroke="#f59e0b" stroke-width="2"/>
+        <text x="105" y="127" text-anchor="middle" font-size="11" fill="#92400e" font-family="'Amiri', serif">(xy)ᵃ = xᵃy</text>
+        <rect x="210" y="100" width="170" height="45" rx="6" fill="#fde68a" stroke="#f59e0b" stroke-width="2"/>
+        <text x="295" y="127" text-anchor="middle" font-size="11" fill="#92400e" font-family="'Amiri', serif">xᵃ/xᵇ = xᵃᵇ</text>
+        <rect x="20" y="155" width="170" height="45" rx="6" fill="#fde68a" stroke="#f59e0b" stroke-width="2"/>
+        <text x="105" y="182" text-anchor="middle" font-size="11" fill="#92400e" font-family="'Amiri', serif">x⁰ = 1</text>
+        <rect x="210" y="155" width="170" height="45" rx="6" fill="#fde68a" stroke="#f59e0b" stroke-width="2"/>
+        <text x="295" y="182" text-anchor="middle" font-size="11" fill="#92400e" font-family="'Amiri', serif">x⁻ = 1/xᵃ</text>
+        <text x="200" y="230" text-anchor="middle" font-size="12" fill="#92400e" font-weight="bold">Apply rules step by step!</text>
+    </svg>`,
+    
+    triangle_area: `<svg class="svg-graph" width="400" height="260" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="250" rx="12" fill="#fce7f3" stroke="#ec4899" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#9f1239" font-weight="bold"> مساحة المثلث - Triangle Area</text>
+        <polygon points="100,200 300,200 200,80" fill="#fbcfe8" stroke="#ec4899" stroke-width="3"/>
+        <line x1="200" y1="80" x2="200" y2="200" stroke="#dc2626" stroke-width="2" stroke-dasharray="4"/>
+        <text x="210" y="145" font-size="12" fill="#dc2626" font-weight="bold">h (height)</text>
+        <text x="200" y="220" text-anchor="middle" font-size="12" fill="#9f1239" font-weight="bold">b (base)</text>
+        <text x="200" y="245" text-anchor="middle" font-size="13" fill="#9f1239" font-family="'Amiri', serif">A = ½ × b × h</text>
+    </svg>`,
+    
+    right_triangle: `<svg class="svg-graph" width="400" height="260" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="250" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#1e40af" font-weight="bold"> المثلث القائم - Right Triangle</text>
+        <polygon points="100,200 300,200 100,80" fill="#bfdbfe" stroke="#2563eb" stroke-width="3"/>
+        <rect x="100" y="185" width="15" height="15" fill="none" stroke="#2563eb" stroke-width="2"/>
+        <text x="200" y="220" text-anchor="middle" font-size="12" fill="#1e40af" font-weight="bold">base = b</text>
+        <text x="75" y="145" font-size="12" fill="#1e40af" font-weight="bold">h</text>
+        <text x="200" y="130" text-anchor="middle" font-size="12" fill="#1e40af" font-weight="bold">hypotenuse</text>
+        <text x="200" y="245" text-anchor="middle" font-size="13" fill="#1e40af" font-family="'Amiri', serif">A = ½ × base × height</text>
+    </svg>`,
+    
+    simplification_steps: `<svg class="svg-graph" width="400" height="260" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="250" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#065f46" font-weight="bold">📝 خطوات التبسيط</text>
+        <rect x="30" y="45" width="340" height="40" rx="6" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="200" y="70" text-anchor="middle" font-size="12" fill="#065f46" font-weight="bold">1. اضرب المعاملات (Coefficients)</text>
+        <rect x="30" y="95" width="340" height="40" rx="6" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="200" y="120" text-anchor="middle" font-size="12" fill="#065f46" font-weight="bold">2. اجمع الأسس للمتغيرات المتشابهة</text>
+        <rect x="30" y="145" width="340" height="40" rx="6" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="200" y="170" text-anchor="middle" font-size="12" fill="#065f46" font-weight="bold">3. طبق قاعدة القوة: (xᵃ)ᵇ = xᵃᵇ</text>
+        <rect x="30" y="195" width="340" height="40" rx="6" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="200" y="220" text-anchor="middle" font-size="12" fill="#065f46" font-weight="bold">4. بسّط النتيجة النهائية</text>
+    </svg>`
+};
+
+// ==================== EXAM DATA - 30 QUESTIONS ====================
 const originalExamData = {
-    "sections": [
+    sections: [
         {
-            "id": "sec1",
-            "title": {
-                "ar": "🔹 الجزء 1: المفاهيم والأساسيات",
-                "en": "🔹 Part 1: Core Concepts & Fundamentals"
-            },
-            "questions": [
+            id: 'sec1',
+            title: { ar: '🔹 الجزء 1: تحديد الدوال أحادية الحد (Q1-Q6)', en: '🔹 Part 1: Identifying Monomials (Q1-Q6)' },
+            questions: [
                 {
-                    "q": {
-                        "ar": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">مسألة حسابية وتطبيق قانون</span><span class=\"q-law-pill\">📐 x² + bx + c = (x + p)(x + q) where p+q=b and pq=c</span></div>حلل المقدار: x² + 9x + 20",
-                        "en": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">Applied Problem & Law</span><span class=\"q-law-pill\">📐 x² + bx + c = (x + p)(x + q) where p+q=b and pq=c</span></div>Factor the expression: x² + 9x + 20"
-                    },
-                    "options": [
-                        {
-                            "ar": "(x+4)(x+5)",
-                            "en": "(x+4)(x+5)"
-                        },
-                        {
-                            "ar": "(x+2)(x+10)",
-                            "en": "(x+2)(x+10)"
-                        },
-                        {
-                            "ar": "(x+1)(x+20)",
-                            "en": "(x+1)(x+20)"
-                        },
-                        {
-                            "ar": "(x+3)(x+7)",
-                            "en": "(x+3)(x+7)"
-                        }
+                    q: { ar: 'هل التعبير <span class="math-display">122</span> دالة أحادية الحد (Monomial)؟', en: 'Is <span class="math-display">122</span> a monomial?' },
+                    svg: svgGraphs.monomial_check,
+                    options: [
+                        { ar: 'نعم، لأنه عدد ثابت (حد واحد)', en: 'Yes, it is a constant (one term)' },
+                        { ar: 'لا، لأنه لا يحتوي على متغير', en: 'No, it has no variable' },
+                        { ar: 'نعم، لأنه يحتوي على +', en: 'Yes, because it contains +' },
+                        { ar: 'لا، لأنه كسر', en: 'No, it is a fraction' }
                     ],
-                    "correct": 0,
-                    "answer": {
-                        "ar": "نبحث عن عددين حاصل ضربهما 20 ومجموعهما 9، وهما 4 و 5.",
-                        "en": "We look for two numbers whose product is 20 and sum is 9, which are 4 and 5."
-                    }
+                    correct: 0,
+                    answer: { ar: 'نعم، الأعداد الثابتة تعتبر دوال أحادية الحد (درجة 0)', en: 'Yes, constants are monomials (degree 0)' }
                 },
                 {
-                    "q": {
-                        "ar": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">مسألة حسابية وتطبيق قانون</span><span class=\"q-law-pill\">📐 x² + bx + c = (x - p)(x - q)</span></div>حلل المقدار: y² - 11y + 24",
-                        "en": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">Applied Problem & Law</span><span class=\"q-law-pill\">📐 x² + bx + c = (x - p)(x - q)</span></div>Factor the expression: y² - 11y + 24"
-                    },
-                    "options": [
-                        {
-                            "ar": "(y-2)(y-12)",
-                            "en": "(y-2)(y-12)"
-                        },
-                        {
-                            "ar": "(y-3)(y-8)",
-                            "en": "(y-3)(y-8)"
-                        },
-                        {
-                            "ar": "(y-4)(y-6)",
-                            "en": "(y-4)(y-6)"
-                        },
-                        {
-                            "ar": "(y-1)(y-24)",
-                            "en": "(y-1)(y-24)"
-                        }
+                    q: { ar: 'هل التعبير <span class="math-display">3a⁴</span> دالة أحادية الحد؟', en: 'Is <span class="math-display">3a</span> a monomial?' },
+                    options: [
+                        { ar: 'نعم، حد واحد بمعامل 3 ومتغير a مرفوع للأس 4', en: 'Yes, one term with coefficient 3 and variable a⁴' },
+                        { ar: 'لا، لأنه يحتوي على أس', en: 'No, because it has an exponent' },
+                        { ar: 'لا، لأن المعامل ليس 1', en: 'No, because coefficient is not 1' },
+                        { ar: 'نعم، لكن درجته 3', en: 'Yes, but degree is 3' }
                     ],
-                    "correct": 1,
-                    "answer": {
-                        "ar": "نبحث عن عددين حاصل ضربهما 24 ومجموعهما -11، وهما -3 و -8.",
-                        "en": "We look for two numbers whose product is 24 and sum is -11, which are -3 and -8."
-                    }
+                    correct: 0,
+                    answer: { ar: 'نعم، 3a⁴ دالة أحادية الحد. المعامل = 3، الدرجة = 4', en: 'Yes, 3a⁴ is a monomial. Coefficient = 3, degree = 4' }
                 },
                 {
-                    "q": {
-                        "ar": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">مسألة حسابية وتطبيق قانون</span><span class=\"q-law-pill\">📐 x² + bx + c = (x + p)(x - q)</span></div>حلل المقدار: a² + 2a - 15",
-                        "en": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">Applied Problem & Law</span><span class=\"q-law-pill\">📐 x² + bx + c = (x + p)(x - q)</span></div>Factor the expression: a² + 2a - 15"
-                    },
-                    "options": [
-                        {
-                            "ar": "(a+5)(a-3)",
-                            "en": "(a+5)(a-3)"
-                        },
-                        {
-                            "ar": "(a-5)(a+3)",
-                            "en": "(a-5)(a+3)"
-                        },
-                        {
-                            "ar": "(a+15)(a-1)",
-                            "en": "(a+15)(a-1)"
-                        },
-                        {
-                            "ar": "(a+1)(a-15)",
-                            "en": "(a+1)(a-15)"
-                        }
+                    q: { ar: 'هل التعبير <span class="math-display">2c + 2</span> دالة أحادية الحد؟', en: 'Is <span class="math-display">2c + 2</span> a monomial?' },
+                    options: [
+                        { ar: 'لا، لأنه يحتوي على حدين (عملية جمع)', en: 'No, it has two terms (addition)' },
+                        { ar: 'نعم، لأنه يحتوي على متغير', en: 'Yes, it has a variable' },
+                        { ar: 'نعم، لأن المعاملات أعداد صحيحة', en: 'Yes, because coefficients are integers' },
+                        { ar: 'لا، لأن الدرجة عالية', en: 'No, because degree is high' }
                     ],
-                    "correct": 0,
-                    "answer": {
-                        "ar": "نبحث عن عددين حاصل ضربهما -15 ومجموعهما 2، وهما 5 و -3.",
-                        "en": "We look for two numbers whose product is -15 and sum is 2, which are 5 and -3."
-                    }
+                    correct: 0,
+                    answer: { ar: 'لا، 2c + 2 يحتوي على حدين مفصولين بـ +، فهو ذو حدين (Binomial)', en: 'No, 2c + 2 has two terms separated by +, so it is a binomial' }
                 },
                 {
-                    "q": {
-                        "ar": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">مسألة حسابية وتطبيق قانون</span><span class=\"q-law-pill\">📐 x² + bx + c = (x - p)(x + q)</span></div>حلل المقدار: n² - 5n - 14",
-                        "en": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">Applied Problem & Law</span><span class=\"q-law-pill\">📐 x² + bx + c = (x - p)(x + q)</span></div>Factor the expression: n² - 5n - 14"
-                    },
-                    "options": [
-                        {
-                            "ar": "(n-7)(n+2)",
-                            "en": "(n-7)(n+2)"
-                        },
-                        {
-                            "ar": "(n+7)(n-2)",
-                            "en": "(n+7)(n-2)"
-                        },
-                        {
-                            "ar": "(n-14)(n+1)",
-                            "en": "(n-14)(n+1)"
-                        },
-                        {
-                            "ar": "(n-1)(n+14)",
-                            "en": "(n-1)(n+14)"
-                        }
+                    q: { ar: 'هل التعبير <span class="math-display">-2g/(4h)</span> دالة أحادية الحد؟', en: 'Is <span class="math-display">-2g/(4h)</span> a monomial?' },
+                    options: [
+                        { ar: 'لا، لأن المتغير h في المقام', en: 'No, because variable h is in denominator' },
+                        { ar: 'نعم، لأنه كسر', en: 'Yes, because it is a fraction' },
+                        { ar: 'نعم، لأن المعامل سالب', en: 'Yes, because coefficient is negative' },
+                        { ar: 'لا، لأن g في البسط', en: 'No, because g is in numerator' }
                     ],
-                    "correct": 0,
-                    "answer": {
-                        "ar": "نبحث عن عددين حاصل ضربهما -14 ومجموعهما -5، وهما -7 و 2.",
-                        "en": "We look for two numbers whose product is -14 and sum is -5, which are -7 and 2."
-                    }
+                    correct: 0,
+                    answer: { ar: 'لا، الدالة أحادية الحد لا يمكن أن تحتوي على متغير في المقام', en: 'No, monomials cannot have variables in the denominator' }
+                },
+                {
+                    q: { ar: 'هل التعبير <span class="math-display">5k/10</span> دالة أحادية الحد؟', en: 'Is <span class="math-display">5k/10</span> a monomial?' },
+                    options: [
+                        { ar: 'نعم، لأنه يمكن تبسيطه إلى (1/2)k', en: 'Yes, it simplifies to (1/2)k' },
+                        { ar: 'لا، لأنه كسر', en: 'No, because it is a fraction' },
+                        { ar: 'نعم، لكن معامله 5', en: 'Yes, but coefficient is 5' },
+                        { ar: 'لا، لأن k في البسط', en: 'No, because k is in numerator' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'نعم، 5k/10 = (1/2)k، وهو حد واحد بمعامل كسري', en: 'Yes, 5k/10 = (1/2)k, one term with fractional coefficient' }
+                },
+                {
+                    q: { ar: 'هل التعبير <span class="math-display">6m + 3n</span> دالة أحادية الحد؟', en: 'Is <span class="math-display">6m + 3n</span> a monomial?' },
+                    options: [
+                        { ar: 'لا، لأنه يحتوي على حدين', en: 'No, it has two terms' },
+                        { ar: 'نعم، لأنه يحتوي على متغيرين', en: 'Yes, it has two variables' },
+                        { ar: 'نعم، لأن المعاملات أعداد صحيحة', en: 'Yes, because coefficients are integers' },
+                        { ar: 'لا، لأن m و n مختلفان', en: 'No, because m and n are different' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'لا، 6m + 3n يحتوي على حدين، فهو ذو حدين (Binomial)', en: 'No, 6m + 3n has two terms, so it is a binomial' }
                 }
             ]
         },
         {
-            "id": "sec2",
-            "title": {
-                "ar": "🔹 الجزء 2: التطبيقات والمعادلات",
-                "en": "🔹 Part 2: Formulas & Applied Problems"
-            },
-            "questions": [
+            id: 'sec2',
+            title: { ar: '🔹 الجزء 2: تبسيط التعابير (Q7-Q12)', en: '🔹 Part 2: Simplifying Expressions (Q7-Q12)' },
+            questions: [
                 {
-                    "q": {
-                        "ar": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">مسألة حسابية وتطبيق قانون</span><span class=\"q-law-pill\">📐 h² + 9h + 18</span></div>حلل المقدار: 18 + 9h + h²",
-                        "en": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">Applied Problem & Law</span><span class=\"q-law-pill\">📐 h² + 9h + 18</span></div>Factor the expression: 18 + 9h + h²"
-                    },
-                    "options": [
-                        {
-                            "ar": "(h+3)(h+6)",
-                            "en": "(h+3)(h+6)"
-                        },
-                        {
-                            "ar": "(h+2)(h+9)",
-                            "en": "(h+2)(h+9)"
-                        },
-                        {
-                            "ar": "(h+1)(h+18)",
-                            "en": "(h+1)(h+18)"
-                        },
-                        {
-                            "ar": "(h+4)(h+5)",
-                            "en": "(h+4)(h+5)"
-                        }
+                    q: { ar: 'بسّط: <span class="math-display">(q²)(2q⁴)</span>', en: 'Simplify: <span class="math-display">(q²)(2q⁴)</span>' },
+                    svg: svgGraphs.exponent_rules,
+                    options: [
+                        { ar: '<span class="math-display">2q⁶</span>', en: '<span class="math-display">2q⁶</span>' },
+                        { ar: '<span class="math-display">2q⁸</span>', en: '<span class="math-display">2q⁸</span>' },
+                        { ar: '<span class="math-display">q⁶</span>', en: '<span class="math-display">q⁶</span>' },
+                        { ar: '<span class="math-display">2q²</span>', en: '<span class="math-display">2q²</span>' }
                     ],
-                    "correct": 0,
-                    "answer": {
-                        "ar": "نرتب المقدار ليصبح h² + 9h + 18، ثم نبحث عن عددين حاصل ضربهما 18 ومجموعهما 9.",
-                        "en": "Rearrange to h² + 9h + 18, then find two numbers with product 18 and sum 9."
-                    }
+                    correct: 0,
+                    answer: { ar: '2 × q²⁺⁴ = 2q⁶ (اضرب المعاملات، اجمع الأسس)', en: '2 × q²⁺⁴ = 2q⁶ (multiply coefficients, add exponents)' }
                 },
                 {
-                    "q": {
-                        "ar": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">مسألة حسابية وتطبيق قانون</span><span class=\"q-law-pill\">📐 x² - 8x + 20</span></div>حلل المقدار: 20 - 8x + x²",
-                        "en": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">Applied Problem & Law</span><span class=\"q-law-pill\">📐 x² - 8x + 20</span></div>Factor the expression: 20 - 8x + x²"
-                    },
-                    "options": [
-                        {
-                            "ar": "(x-2)(x-10)",
-                            "en": "(x-2)(x-10)"
-                        },
-                        {
-                            "ar": "(x-4)(x-5)",
-                            "en": "(x-4)(x-5)"
-                        },
-                        {
-                            "ar": "(x-2)(x+10)",
-                            "en": "(x-2)(x+10)"
-                        },
-                        {
-                            "ar": "(x+4)(x-5)",
-                            "en": "(x+4)(x-5)"
-                        }
+                    q: { ar: 'بسّط: <span class="math-display">(-2u²)(6u⁶)</span>', en: 'Simplify: <span class="math-display">(-2u²)(6u⁶)</span>' },
+                    options: [
+                        { ar: '<span class="math-display">-12u⁸</span>', en: '<span class="math-display">-12u⁸</span>' },
+                        { ar: '<span class="math-display">12u⁸</span>', en: '<span class="math-display">12u⁸</span>' },
+                        { ar: '<span class="math-display">-12u¹²</span>', en: '<span class="math-display">-12u¹²</span>' },
+                        { ar: '<span class="math-display">4u⁸</span>', en: '<span class="math-display">4u⁸</span>' }
                     ],
-                    "correct": 0,
-                    "answer": {
-                        "ar": "نرتب المقدار ليصبح x² - 8x + 20، ثم نبحث عن عددين حاصل ضربهما 20 ومجموعهما -8.",
-                        "en": "Rearrange to x² - 8x + 20, then find two numbers with product 20 and sum -8."
-                    }
+                    correct: 0,
+                    answer: { ar: '(-2)(6) × u²⁺⁶ = -12u⁸', en: '(-2)(6) × u²⁺⁶ = -12u⁸' }
                 },
                 {
-                    "q": {
-                        "ar": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">مسألة حسابية وتطبيق قانون</span><span class=\"q-law-pill\">📐 x² - 7x - 30</span></div>حلل المقدار: -30 - 7x + x²",
-                        "en": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">Applied Problem & Law</span><span class=\"q-law-pill\">📐 x² - 7x - 30</span></div>Factor the expression: -30 - 7x + x²"
-                    },
-                    "options": [
-                        {
-                            "ar": "(x-10)(x+3)",
-                            "en": "(x-10)(x+3)"
-                        },
-                        {
-                            "ar": "(x+10)(x-3)",
-                            "en": "(x+10)(x-3)"
-                        },
-                        {
-                            "ar": "(x-5)(x+6)",
-                            "en": "(x-5)(x+6)"
-                        },
-                        {
-                            "ar": "(x+5)(x-6)",
-                            "en": "(x+5)(x-6)"
-                        }
+                    q: { ar: 'بسّط: <span class="math-display">(9w²x)(w⁶x⁴)</span>', en: 'Simplify: <span class="math-display">(9w²x⁸)(w⁶x⁴)</span>' },
+                    options: [
+                        { ar: '<span class="math-display">9w⁸x¹²</span>', en: '<span class="math-display">9w⁸x¹²</span>' },
+                        { ar: '<span class="math-display">9w¹²x³²</span>', en: '<span class="math-display">9w¹²x³²</span>' },
+                        { ar: '<span class="math-display">w⁸x¹²</span>', en: '<span class="math-display">w⁸x¹²</span>' },
+                        { ar: '<span class="math-display">9w⁴x⁴</span>', en: '<span class="math-display">9w⁴x⁴</span>' }
                     ],
-                    "correct": 0,
-                    "answer": {
-                        "ar": "نرتب المقدار ليصبح x² - 7x - 30، نبحث عن عددين حاصل ضربهما -30 ومجموعهما -7.",
-                        "en": "Rearrange to x² - 7x - 30, find two numbers with product -30 and sum -7."
-                    }
+                    correct: 0,
+                    answer: { ar: '9 × w²⁺⁶ × x⁸⁺⁴ = 9w⁸x¹²', en: '9 × w²⁺⁶ × x⁸⁺⁴ = 9wx¹²' }
                 },
                 {
-                    "q": {
-                        "ar": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">مسألة حسابية وتطبيق قانون</span><span class=\"q-law-pill\">📐 m² - 3m - 18</span></div>حلل المقدار: -18 - 3m + m²",
-                        "en": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">Applied Problem & Law</span><span class=\"q-law-pill\">📐 m² - 3m - 18</span></div>Factor the expression: -18 - 3m + m²"
-                    },
-                    "options": [
-                        {
-                            "ar": "(m-6)(m+3)",
-                            "en": "(m-6)(m+3)"
-                        },
-                        {
-                            "ar": "(m+6)(m-3)",
-                            "en": "(m+6)(m-3)"
-                        },
-                        {
-                            "ar": "(m-9)(m+2)",
-                            "en": "(m-9)(m+2)"
-                        },
-                        {
-                            "ar": "(m+9)(m-2)",
-                            "en": "(m+9)(m-2)"
-                        }
+                    q: { ar: 'بسّط: <span class="math-display">(y⁶z⁹)(6y⁴z²)</span>', en: 'Simplify: <span class="math-display">(y⁶z⁹)(6y⁴z²)</span>' },
+                    options: [
+                        { ar: '<span class="math-display">6y¹⁰z¹¹</span>', en: '<span class="math-display">6y¹⁰z¹¹</span>' },
+                        { ar: '<span class="math-display">6y²⁴z¹⁸</span>', en: '<span class="math-display">6y²⁴z¹⁸</span>' },
+                        { ar: '<span class="math-display">y¹⁰z¹¹</span>', en: '<span class="math-display">y¹⁰z¹¹</span>' },
+                        { ar: '<span class="math-display">6y¹⁰z⁷</span>', en: '<span class="math-display">6y¹⁰z⁷</span>' }
                     ],
-                    "correct": 0,
-                    "answer": {
-                        "ar": "نرتب المقدار ليصبح m² - 3m - 18، نبحث عن عددين حاصل ضربهما -18 ومجموعهما -3.",
-                        "en": "Rearrange to m² - 3m - 18, find two numbers with product -18 and sum -3."
-                    }
+                    correct: 0,
+                    answer: { ar: '6 × y⁶⁺⁴ × z⁹⁺² = 6y¹⁰z¹¹', en: '6 × y⁶⁺⁴ × z⁹⁺² = 6y¹⁰z¹¹' }
+                },
+                {
+                    q: { ar: 'بسّط: <span class="math-display">(b⁸c⁶d)(7b⁶c²d)</span>', en: 'Simplify: <span class="math-display">(b⁸c⁶d⁵)(7b⁶c²d)</span>' },
+                    options: [
+                        { ar: '<span class="math-display">7b¹⁴c⁸d⁶</span>', en: '<span class="math-display">7b¹⁴c⁸d⁶</span>' },
+                        { ar: '<span class="math-display">7b⁴⁸c¹²d⁵</span>', en: '<span class="math-display">7b⁴c¹²d⁵</span>' },
+                        { ar: '<span class="math-display">b¹⁴c⁸d⁶</span>', en: '<span class="math-display">b¹⁴c⁸d⁶</span>' },
+                        { ar: '<span class="math-display">7b¹⁴cd⁵</span>', en: '<span class="math-display">7b¹⁴c⁸d⁵</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '7 × b⁸⁺⁶ × c⁶⁺² × d⁵¹ = 7b¹⁴c⁸d⁶', en: '7 × b⁸⁺⁶ × c⁶⁺² × d⁵⁺¹ = 7b¹c⁸d⁶' }
+                },
+                {
+                    q: { ar: 'بسّط: <span class="math-display">(14f⁴g²h²)(-3f⁴g²h²)</span>', en: 'Simplify: <span class="math-display">(14f⁴g²h²)(-3f⁴g²h²)</span>' },
+                    options: [
+                        { ar: '<span class="math-display">-42f⁸g⁴h⁴</span>', en: '<span class="math-display">-42fg⁴h⁴</span>' },
+                        { ar: '<span class="math-display">42f⁸g⁴h⁴</span>', en: '<span class="math-display">42f⁸g⁴h⁴</span>' },
+                        { ar: '<span class="math-display">-42f¹⁶gh⁴</span>', en: '<span class="math-display">-42f¹⁶g⁴h⁴</span>' },
+                        { ar: '<span class="math-display">-11f⁸g⁴h⁴</span>', en: '<span class="math-display">-11f⁸g⁴h⁴</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '(14)(-3) × f⁴⁺⁴ × g²⁺² × h²² = -42f⁸g⁴h⁴', en: '(14)(-3) × f⁴⁺⁴ × g²⁺² × h²⁺² = -42f⁸g⁴h⁴' }
                 }
             ]
         },
         {
-            "id": "sec3",
-            "title": {
-                "ar": "🔹 الجزء 3: التحليل والاستنتاج",
-                "en": "🔹 Part 3: Analysis & Derivations"
-            },
-            "questions": [
+            id: 'sec3',
+            title: { ar: '🔹 الجزء 3: قاعدة القوة والتبسيط المتقدم (Q13-Q18)', en: '🔹 Part 3: Power Rule & Advanced Simplification (Q13-Q18)' },
+            questions: [
                 {
-                    "q": {
-                        "ar": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">مسألة حسابية وتطبيق قانون</span><span class=\"q-law-pill\">📐 x² + bx + c = 0</span></div>حل المعادلة: x² - 5x + 6 = 0",
-                        "en": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">Applied Problem & Law</span><span class=\"q-law-pill\">📐 x² + bx + c = 0</span></div>Solve the equation: x² - 5x + 6 = 0"
-                    },
-                    "options": [
-                        {
-                            "ar": "x=2, x=3",
-                            "en": "x=2, x=3"
-                        },
-                        {
-                            "ar": "x=-2, x=-3",
-                            "en": "x=-2, x=-3"
-                        },
-                        {
-                            "ar": "x=1, x=6",
-                            "en": "x=1, x=6"
-                        },
-                        {
-                            "ar": "x=-1, x=-6",
-                            "en": "x=-1, x=-6"
-                        }
+                    q: { ar: 'بسّط: <span class="math-display">(jk⁷)⁴</span>', en: 'Simplify: <span class="math-display">(j⁵k⁷)⁴</span>' },
+                    svg: svgGraphs.simplification_steps,
+                    options: [
+                        { ar: '<span class="math-display">j²⁰k²⁸</span>', en: '<span class="math-display">j²⁰k²⁸</span>' },
+                        { ar: '<span class="math-display">j⁹k¹¹</span>', en: '<span class="math-display">j⁹k¹¹</span>' },
+                        { ar: '<span class="math-display">j²⁰k⁷</span>', en: '<span class="math-display">j²⁰k⁷</span>' },
+                        { ar: '<span class="math-display">j⁵k²⁸</span>', en: '<span class="math-display">j⁵k²⁸</span>' }
                     ],
-                    "correct": 0,
-                    "answer": {
-                        "ar": "نحلل المقدار إلى (x-2)(x-3)=0، إذن x=2 أو x=3.",
-                        "en": "Factor to (x-2)(x-3)=0, so x=2 or x=3."
-                    }
+                    correct: 0,
+                    answer: { ar: 'j⁵ˣ⁴ × kˣ⁴ = j²⁰k²⁸ (اضرب الأسس)', en: 'j⁵ˣ⁴ × kˣ⁴ = j²⁰k²⁸ (multiply exponents)' }
                 },
                 {
-                    "q": {
-                        "ar": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">مسألة حسابية وتطبيق قانون</span><span class=\"q-law-pill\">📐 y² + 2y - 8 = 0</span></div>حل المعادلة: y² + 2y = 8",
-                        "en": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">Applied Problem & Law</span><span class=\"q-law-pill\">📐 y² + 2y - 8 = 0</span></div>Solve the equation: y² + 2y = 8"
-                    },
-                    "options": [
-                        {
-                            "ar": "y=2, y=-4",
-                            "en": "y=2, y=-4"
-                        },
-                        {
-                            "ar": "y=-2, y=4",
-                            "en": "y=-2, y=4"
-                        },
-                        {
-                            "ar": "y=1, y=-8",
-                            "en": "y=1, y=-8"
-                        },
-                        {
-                            "ar": "y=-1, y=8",
-                            "en": "y=-1, y=8"
-                        }
+                    q: { ar: 'بسّط: <span class="math-display">(n³p)⁴</span>', en: 'Simplify: <span class="math-display">(n³p)⁴</span>' },
+                    options: [
+                        { ar: '<span class="math-display">n¹²p⁴</span>', en: '<span class="math-display">n¹²p⁴</span>' },
+                        { ar: '<span class="math-display">n⁷p⁴</span>', en: '<span class="math-display">n⁷p⁴</span>' },
+                        { ar: '<span class="math-display">n¹²p</span>', en: '<span class="math-display">n¹²p</span>' },
+                        { ar: '<span class="math-display">n³p⁴</span>', en: '<span class="math-display">n³p⁴</span>' }
                     ],
-                    "correct": 0,
-                    "answer": {
-                        "ar": "نحولها إلى y² + 2y - 8 = 0، ثم نحلل (y+4)(y-2)=0.",
-                        "en": "Rewrite as y² + 2y - 8 = 0, then factor (y+4)(y-2)=0."
-                    }
+                    correct: 0,
+                    answer: { ar: 'n³ˣ × p¹ˣ⁴ = n¹²p⁴', en: 'n³⁴ × p¹ˣ⁴ = n¹²p⁴' }
                 },
                 {
-                    "q": {
-                        "ar": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">مسألة حسابية وتطبيق قانون</span><span class=\"q-law-pill\">📐 a² - 9a + 18 = 0</span></div>حل المعادلة: a² - 9a = -18",
-                        "en": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">Applied Problem & Law</span><span class=\"q-law-pill\">📐 a² - 9a + 18 = 0</span></div>Solve the equation: a² - 9a = -18"
-                    },
-                    "options": [
-                        {
-                            "ar": "a=3, a=6",
-                            "en": "a=3, a=6"
-                        },
-                        {
-                            "ar": "a=-3, a=-6",
-                            "en": "a=-3, a=-6"
-                        },
-                        {
-                            "ar": "a=2, a=9",
-                            "en": "a=2, a=9"
-                        },
-                        {
-                            "ar": "a=-2, a=-9",
-                            "en": "a=-2, a=-9"
-                        }
+                    q: { ar: 'بسّط: <span class="math-display">[(2²)²]²</span>', en: 'Simplify: <span class="math-display">[(2²)²]²</span>' },
+                    options: [
+                        { ar: '<span class="math-display">2⁸ = 256</span>', en: '<span class="math-display">2 = 256</span>' },
+                        { ar: '<span class="math-display">2⁶ = 64</span>', en: '<span class="math-display">2⁶ = 64</span>' },
+                        { ar: '<span class="math-display">2 = 16</span>', en: '<span class="math-display">2⁴ = 16</span>' },
+                        { ar: '<span class="math-display">2¹</span>', en: '<span class="math-display">2¹⁶</span>' }
                     ],
-                    "correct": 0,
-                    "answer": {
-                        "ar": "نحولها إلى a² - 9a + 18 = 0، ثم نحلل (a-3)(a-6)=0.",
-                        "en": "Rewrite as a² - 9a + 18 = 0, then factor (a-3)(a-6)=0."
-                    }
+                    correct: 0,
+                    answer: { ar: '2²²ˣ² = 2 = 256', en: '2²ˣ²ˣ² = 2⁸ = 256' }
                 },
                 {
-                    "q": {
-                        "ar": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">مسألة حسابية وتطبيق قانون</span><span class=\"q-law-pill\">📐 c² + 4c + 3 = 0</span></div>حل المعادلة: c² + 4c + 3 = 0",
-                        "en": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">Applied Problem & Law</span><span class=\"q-law-pill\">📐 c² + 4c + 3 = 0</span></div>Solve the equation: c² + 4c + 3 = 0"
-                    },
-                    "options": [
-                        {
-                            "ar": "c=-1, c=-3",
-                            "en": "c=-1, c=-3"
-                        },
-                        {
-                            "ar": "c=1, c=3",
-                            "en": "c=1, c=3"
-                        },
-                        {
-                            "ar": "c=-1, c=3",
-                            "en": "c=-1, c=3"
-                        },
-                        {
-                            "ar": "c=1, c=-3",
-                            "en": "c=1, c=-3"
-                        }
+                    q: { ar: 'بسّط: <span class="math-display">[(3²)²]⁴</span>', en: 'Simplify: <span class="math-display">[(3²)²]⁴</span>' },
+                    options: [
+                        { ar: '<span class="math-display">3¹⁶</span>', en: '<span class="math-display">3¹⁶</span>' },
+                        { ar: '<span class="math-display">3⁸</span>', en: '<span class="math-display">3⁸</span>' },
+                        { ar: '<span class="math-display">3¹²</span>', en: '<span class="math-display">3¹²</span>' },
+                        { ar: '<span class="math-display">9¹⁶</span>', en: '<span class="math-display">9¹⁶</span>' }
                     ],
-                    "correct": 0,
-                    "answer": {
-                        "ar": "نحلل المقدار إلى (c+1)(c+3)=0، إذن c=-1 أو c=-3.",
-                        "en": "Factor to (c+1)(c+3)=0, so c=-1 or c=-3."
-                    }
+                    correct: 0,
+                    answer: { ar: '3²²ˣ⁴ = 3¹⁶', en: '3²ˣ²ˣ = 3¹⁶' }
+                },
+                {
+                    q: { ar: 'بسّط: <span class="math-display">[(4r²t)³]²</span>', en: 'Simplify: <span class="math-display">[(4r²t)³]²</span>' },
+                    options: [
+                        { ar: '<span class="math-display">4096r¹²t⁶</span>', en: '<span class="math-display">4096r¹²t⁶</span>' },
+                        { ar: '<span class="math-display">4r¹²t⁶</span>', en: '<span class="math-display">4r¹²t⁶</span>' },
+                        { ar: '<span class="math-display">64r¹²t⁶</span>', en: '<span class="math-display">64r¹²t⁶</span>' },
+                        { ar: '<span class="math-display">4096r⁶t⁶</span>', en: '<span class="math-display">4096r⁶t⁶</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '4³ˣ² × r²³ˣ² × t¹³ˣ² = 4⁶r¹²t⁶ = 4096r¹²t⁶', en: '4³ˣ² × r²ˣ³² × t¹ˣ³ˣ² = 4⁶r¹²t⁶ = 4096r¹²t⁶' }
+                },
+                {
+                    q: { ar: 'بسّط: <span class="math-display">[(-2xy²)³]²</span>', en: 'Simplify: <span class="math-display">[(-2xy²)³]²</span>' },
+                    options: [
+                        { ar: '<span class="math-display">64x⁶y¹²</span>', en: '<span class="math-display">64x⁶y¹²</span>' },
+                        { ar: '<span class="math-display">-64xy¹²</span>', en: '<span class="math-display">-64x⁶y¹²</span>' },
+                        { ar: '<span class="math-display">64x⁵y⁷</span>', en: '<span class="math-display">64x⁵y⁷</span>' },
+                        { ar: '<span class="math-display">8x⁶y¹²</span>', en: '<span class="math-display">8x⁶y¹²</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '(-2)³ˣ² × x¹ˣ³ˣ² × y²ˣ³ˣ² = (-2)⁶x⁶y¹² = 64x⁶y¹²', en: '(-2)³ˣ² × x¹ˣ³ˣ² × y²³ˣ² = (-2)⁶x⁶y¹² = 64xy¹²' }
                 }
             ]
         },
         {
-            "id": "sec4",
-            "title": {
-                "ar": "🔹 الجزء 4: المسائل المتقدمة",
-                "en": "🔹 Part 4: Advanced Problem Solving"
-            },
-            "questions": [
+            id: 'sec4',
+            title: { ar: ' الجزء 4: المساحات الهندسية (Q19-Q24)', en: '🔹 Part 4: Geometric Areas (Q19-Q24)' },
+            questions: [
                 {
-                    "q": {
-                        "ar": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">مسألة حسابية وتطبيق قانون</span><span class=\"q-law-pill\">📐 x² - 10x + 21 = 0</span></div>حل المعادلة: x² - 10x = -21",
-                        "en": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">Applied Problem & Law</span><span class=\"q-law-pill\">📐 x² - 10x + 21 = 0</span></div>Solve the equation: x² - 10x = -21"
-                    },
-                    "options": [
-                        {
-                            "ar": "x=3, x=7",
-                            "en": "x=3, x=7"
-                        },
-                        {
-                            "ar": "x=-3, x=-7",
-                            "en": "x=-3, x=-7"
-                        },
-                        {
-                            "ar": "x=1, x=21",
-                            "en": "x=1, x=21"
-                        },
-                        {
-                            "ar": "x=-1, x=-21",
-                            "en": "x=-1, x=-21"
-                        }
+                    q: { ar: 'مثلث قاعدته <span class="math-display">5c³d</span> وارتفاعه <span class="math-display">8c²d</span>. ما مساحته؟', en: 'Triangle with base <span class="math-display">5c³d</span> and height <span class="math-display">8c²d⁴</span>. Area?' },
+                    svg: svgGraphs.triangle_area,
+                    options: [
+                        { ar: '<span class="math-display">20c⁵d⁵</span>', en: '<span class="math-display">20cd⁵</span>' },
+                        { ar: '<span class="math-display">40cd⁵</span>', en: '<span class="math-display">40c⁵d⁵</span>' },
+                        { ar: '<span class="math-display">20c⁶d⁵</span>', en: '<span class="math-display">20c⁶d⁵</span>' },
+                        { ar: '<span class="math-display">13cd⁵</span>', en: '<span class="math-display">13c⁵d⁵</span>' }
                     ],
-                    "correct": 0,
-                    "answer": {
-                        "ar": "نحولها إلى x² - 10x + 21 = 0، ثم نحلل (x-3)(x-7)=0.",
-                        "en": "Rewrite as x² - 10x + 21 = 0, then factor (x-3)(x-7)=0."
-                    }
+                    correct: 0,
+                    answer: { ar: 'A = ½ × 5c³d × 8c²d⁴ = ½ × 40c⁵d⁵ = 20c⁵d⁵', en: 'A = ½ × 5c³d × 8c²d = ½ × 40c⁵d⁵ = 20c⁵d⁵' }
                 },
                 {
-                    "q": {
-                        "ar": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">مسألة حسابية وتطبيق قانون</span><span class=\"q-law-pill\">📐 n² - 2n - 80 = 0</span></div>حل المعادلة: n² - 80 = 2n",
-                        "en": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">Applied Problem & Law</span><span class=\"q-law-pill\">📐 n² - 2n - 80 = 0</span></div>Solve the equation: n² - 80 = 2n"
-                    },
-                    "options": [
-                        {
-                            "ar": "n=10, n=-8",
-                            "en": "n=10, n=-8"
-                        },
-                        {
-                            "ar": "n=-10, n=8",
-                            "en": "n=-10, n=8"
-                        },
-                        {
-                            "ar": "n=5, n=-16",
-                            "en": "n=5, n=-16"
-                        },
-                        {
-                            "ar": "n=-5, n=16",
-                            "en": "n=-5, n=16"
-                        }
+                    q: { ar: 'مثلث قائم قاعدته <span class="math-display">3gh</span> وارتفاعه <span class="math-display">2g²h⁵</span>. ما مساحته؟', en: 'Right triangle with base <span class="math-display">3gh</span> and height <span class="math-display">2g²h⁵</span>. Area?' },
+                    svg: svgGraphs.right_triangle,
+                    options: [
+                        { ar: '<span class="math-display">3g³h⁶</span>', en: '<span class="math-display">3g³h⁶</span>' },
+                        { ar: '<span class="math-display">6g³h⁶</span>', en: '<span class="math-display">6g³h⁶</span>' },
+                        { ar: '<span class="math-display">5g³h⁶</span>', en: '<span class="math-display">5g³h⁶</span>' },
+                        { ar: '<span class="math-display">3g²h⁵</span>', en: '<span class="math-display">3g²h⁵</span>' }
                     ],
-                    "correct": 0,
-                    "answer": {
-                        "ar": "نحولها إلى n² - 2n - 80 = 0، ثم نحلل (n-10)(n+8)=0.",
-                        "en": "Rewrite as n² - 2n - 80 = 0, then factor (n-10)(n+8)=0."
-                    }
+                    correct: 0,
+                    answer: { ar: 'A = ½ × 3gh × 2g²h = 3g³h⁶', en: 'A = ½ × 3gh × 2g²h⁵ = 3g³h⁶' }
                 },
                 {
-                    "q": {
-                        "ar": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">مسألة حسابية وتطبيق قانون</span><span class=\"q-law-pill\">📐 d² + 13d + 40 = 0</span></div>حل المعادلة: d² + 40 = -13d",
-                        "en": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">Applied Problem & Law</span><span class=\"q-law-pill\">📐 d² + 13d + 40 = 0</span></div>Solve the equation: d² + 40 = -13d"
-                    },
-                    "options": [
-                        {
-                            "ar": "d=-5, d=-8",
-                            "en": "d=-5, d=-8"
-                        },
-                        {
-                            "ar": "d=5, d=8",
-                            "en": "d=5, d=8"
-                        },
-                        {
-                            "ar": "d=-4, d=-10",
-                            "en": "d=-4, d=-10"
-                        },
-                        {
-                            "ar": "d=4, d=10",
-                            "en": "d=4, d=10"
-                        }
+                    q: { ar: 'مثلث قاعدته <span class="math-display">4x²</span> وارتفاعه <span class="math-display">3x³</span>. ما مساحته؟', en: 'Triangle with base <span class="math-display">4x²</span> and height <span class="math-display">3x³</span>. Area?' },
+                    options: [
+                        { ar: '<span class="math-display">6x⁵</span>', en: '<span class="math-display">6x⁵</span>' },
+                        { ar: '<span class="math-display">12x</span>', en: '<span class="math-display">12x⁵</span>' },
+                        { ar: '<span class="math-display">7x⁵</span>', en: '<span class="math-display">7x⁵</span>' },
+                        { ar: '<span class="math-display">6x⁶</span>', en: '<span class="math-display">6x⁶</span>' }
                     ],
-                    "correct": 0,
-                    "answer": {
-                        "ar": "نحولها إلى d² + 13d + 40 = 0، ثم نحلل (d+5)(d+8)=0.",
-                        "en": "Rewrite as d² + 13d + 40 = 0, then factor (d+5)(d+8)=0."
-                    }
+                    correct: 0,
+                    answer: { ar: 'A = ½ × 4x² × 3x³ = 6x⁵', en: 'A = ½ × 4x² × 3x³ = 6x⁵' }
                 },
                 {
-                    "q": {
-                        "ar": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">مسألة حسابية وتطبيق قانون</span><span class=\"q-law-pill\">📐 y² - 6y - 72 = 0</span></div>حل المعادلة: y² - 72 = 6y",
-                        "en": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">Applied Problem & Law</span><span class=\"q-law-pill\">📐 y² - 6y - 72 = 0</span></div>Solve the equation: y² - 72 = 6y"
-                    },
-                    "options": [
-                        {
-                            "ar": "y=12, y=-6",
-                            "en": "y=12, y=-6"
-                        },
-                        {
-                            "ar": "y=-12, y=6",
-                            "en": "y=-12, y=6"
-                        },
-                        {
-                            "ar": "y=8, y=-9",
-                            "en": "y=8, y=-9"
-                        },
-                        {
-                            "ar": "y=-8, y=9",
-                            "en": "y=-8, y=9"
-                        }
+                    q: { ar: 'مثلث قاعدته <span class="math-display">2a³</span> وارتفاعه <span class="math-display">5a²</span>. ما مساحته؟', en: 'Triangle with base <span class="math-display">2a³</span> and height <span class="math-display">5a²</span>. Area?' },
+                    options: [
+                        { ar: '<span class="math-display">5a⁵</span>', en: '<span class="math-display">5a⁵</span>' },
+                        { ar: '<span class="math-display">10a⁵</span>', en: '<span class="math-display">10a⁵</span>' },
+                        { ar: '<span class="math-display">7a⁵</span>', en: '<span class="math-display">7a⁵</span>' },
+                        { ar: '<span class="math-display">5a⁶</span>', en: '<span class="math-display">5a⁶</span>' }
                     ],
-                    "correct": 0,
-                    "answer": {
-                        "ar": "نحولها إلى y² - 6y - 72 = 0، ثم نحلل (y-12)(y+6)=0.",
-                        "en": "Rewrite as y² - 6y - 72 = 0, then factor (y-12)(y+6)=0."
-                    }
+                    correct: 0,
+                    answer: { ar: 'A = ½ × 2a³ × 5a² = 5a⁵', en: 'A = ½ × 2a³ × 5a² = 5a⁵' }
+                },
+                {
+                    q: { ar: 'مثلث قاعدته <span class="math-display">6m²n</span> وارتفاعه <span class="math-display">4mn³</span>. ما مساحته؟', en: 'Triangle with base <span class="math-display">6m²n</span> and height <span class="math-display">4mn³</span>. Area?' },
+                    options: [
+                        { ar: '<span class="math-display">12m³n⁴</span>', en: '<span class="math-display">12m³n⁴</span>' },
+                        { ar: '<span class="math-display">24m³n⁴</span>', en: '<span class="math-display">24m³n⁴</span>' },
+                        { ar: '<span class="math-display">10m³n</span>', en: '<span class="math-display">10m³n⁴</span>' },
+                        { ar: '<span class="math-display">12m²n³</span>', en: '<span class="math-display">12m²n³</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'A = ½ × 6m²n × 4mn³ = 12m³n⁴', en: 'A = ½ × 6m²n × 4mn³ = 12m³n⁴' }
+                },
+                {
+                    q: { ar: 'مثلث قاعدته <span class="math-display">x⁴</span> وارتفاعه <span class="math-display">x⁵</span>. ما مساحته؟', en: 'Triangle with base <span class="math-display">x⁴</span> and height <span class="math-display">x⁵</span>. Area?' },
+                    options: [
+                        { ar: '<span class="math-display">½x⁹</span>', en: '<span class="math-display">½x⁹</span>' },
+                        { ar: '<span class="math-display">x⁹</span>', en: '<span class="math-display">x</span>' },
+                        { ar: '<span class="math-display">½x²⁰</span>', en: '<span class="math-display">½x²⁰</span>' },
+                        { ar: '<span class="math-display">2x⁹</span>', en: '<span class="math-display">2x⁹</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'A = ½ × x⁴ × x⁵ = ½x⁹', en: 'A = ½ × x⁴ × x⁵ = ½x' }
                 }
             ]
         },
         {
-            "id": "sec5",
-            "title": {
-                "ar": "🔹 الجزء 5: التقييم الشامل",
-                "en": "🔹 Part 5: Comprehensive Evaluation"
-            },
-            "questions": [
+            id: 'sec5',
+            title: { ar: '🔹 الجزء 5: التبسيط المتقدم (Q25-Q30)', en: '🔹 Part 5: Advanced Simplification (Q25-Q30)' },
+            questions: [
                 {
-                    "q": {
-                        "ar": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">مسألة حسابية وتطبيق قانون</span><span class=\"q-law-pill\">📐 h² - 12h + 36 = 0</span></div>حل المعادلة: h² + 36 = 12h",
-                        "en": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">Applied Problem & Law</span><span class=\"q-law-pill\">📐 h² - 12h + 36 = 0</span></div>Solve the equation: h² + 36 = 12h"
-                    },
-                    "options": [
-                        {
-                            "ar": "h=6",
-                            "en": "h=6"
-                        },
-                        {
-                            "ar": "h=-6",
-                            "en": "h=-6"
-                        },
-                        {
-                            "ar": "h=4, h=9",
-                            "en": "h=4, h=9"
-                        },
-                        {
-                            "ar": "h=3, h=12",
-                            "en": "h=3, h=12"
-                        }
+                    q: { ar: 'بسّط: <span class="math-display">(2a³)⁴(a³)³</span>', en: 'Simplify: <span class="math-display">(2a³)⁴(a³)³</span>' },
+                    options: [
+                        { ar: '<span class="math-display">16a²¹</span>', en: '<span class="math-display">16a²¹</span>' },
+                        { ar: '<span class="math-display">2a²¹</span>', en: '<span class="math-display">2a²¹</span>' },
+                        { ar: '<span class="math-display">16a¹²</span>', en: '<span class="math-display">16a¹²</span>' },
+                        { ar: '<span class="math-display">8a²¹</span>', en: '<span class="math-display">8a²¹</span>' }
                     ],
-                    "correct": 0,
-                    "answer": {
-                        "ar": "نحولها إلى h² - 12h + 36 = 0، وهي مربع كامل (h-6)²=0.",
-                        "en": "Rewrite as h² - 12h + 36 = 0, which is a perfect square (h-6)²=0."
-                    }
+                    correct: 0,
+                    answer: { ar: '2⁴a¹² × a = 16a²¹', en: '2⁴a¹² × a⁹ = 16a²¹' }
                 },
                 {
-                    "q": {
-                        "ar": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">مسألة حسابية وتطبيق قانون</span><span class=\"q-law-pill\">📐 x² + bx + c</span></div>حلل المقدار: x² + 13x + 40",
-                        "en": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">Applied Problem & Law</span><span class=\"q-law-pill\">📐 x² + bx + c</span></div>Factor the expression: x² + 13x + 40"
-                    },
-                    "options": [
-                        {
-                            "ar": "(x+5)(x+8)",
-                            "en": "(x+5)(x+8)"
-                        },
-                        {
-                            "ar": "(x+4)(x+10)",
-                            "en": "(x+4)(x+10)"
-                        },
-                        {
-                            "ar": "(x+2)(x+20)",
-                            "en": "(x+2)(x+20)"
-                        },
-                        {
-                            "ar": "(x+1)(x+40)",
-                            "en": "(x+1)(x+40)"
-                        }
+                    q: { ar: 'بسّط: <span class="math-display">(c³)²(-3c⁵)²</span>', en: 'Simplify: <span class="math-display">(c³)²(-3c)²</span>' },
+                    options: [
+                        { ar: '<span class="math-display">9c¹⁶</span>', en: '<span class="math-display">9c¹⁶</span>' },
+                        { ar: '<span class="math-display">-9c¹⁶</span>', en: '<span class="math-display">-9c¹⁶</span>' },
+                        { ar: '<span class="math-display">9c¹¹</span>', en: '<span class="math-display">9c¹¹</span>' },
+                        { ar: '<span class="math-display">6c¹⁶</span>', en: '<span class="math-display">6c¹⁶</span>' }
                     ],
-                    "correct": 0,
-                    "answer": {
-                        "ar": "نبحث عن عددين حاصل ضربهما 40 ومجموعهما 13، وهما 5 و 8.",
-                        "en": "We look for two numbers whose product is 40 and sum is 13, which are 5 and 8."
-                    }
+                    correct: 0,
+                    answer: { ar: 'c⁶ × 9c¹⁰ = 9c¹⁶', en: 'c⁶ × 9c¹⁰ = 9c¹⁶' }
                 },
                 {
-                    "q": {
-                        "ar": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">مسألة حسابية وتطبيق قانون</span><span class=\"q-law-pill\">📐 x² + bx + c = 0</span></div>حل المعادلة: x² - 15x + 50 = 0",
-                        "en": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">Applied Problem & Law</span><span class=\"q-law-pill\">📐 x² + bx + c = 0</span></div>Solve the equation: x² - 15x + 50 = 0"
-                    },
-                    "options": [
-                        {
-                            "ar": "x=5, x=10",
-                            "en": "x=5, x=10"
-                        },
-                        {
-                            "ar": "x=-5, x=-10",
-                            "en": "x=-5, x=-10"
-                        },
-                        {
-                            "ar": "x=2, x=25",
-                            "en": "x=2, x=25"
-                        },
-                        {
-                            "ar": "x=1, x=50",
-                            "en": "x=1, x=50"
-                        }
+                    q: { ar: 'بسّط: <span class="math-display">(0.5x³)²</span>', en: 'Simplify: <span class="math-display">(0.5x³)²</span>' },
+                    options: [
+                        { ar: '<span class="math-display">0.25x⁶</span>', en: '<span class="math-display">0.25x⁶</span>' },
+                        { ar: '<span class="math-display">0.5x⁶</span>', en: '<span class="math-display">0.5x⁶</span>' },
+                        { ar: '<span class="math-display">0.25x⁵</span>', en: '<span class="math-display">0.25x⁵</span>' },
+                        { ar: '<span class="math-display">1x⁶</span>', en: '<span class="math-display">1x⁶</span>' }
                     ],
-                    "correct": 0,
-                    "answer": {
-                        "ar": "نحلل المقدار إلى (x-5)(x-10)=0، إذن x=5 أو x=10.",
-                        "en": "Factor to (x-5)(x-10)=0, so x=5 or x=10."
-                    }
+                    correct: 0,
+                    answer: { ar: '0.5² × x³ˣ² = 0.25x⁶', en: '0.5² × x³ˣ² = 0.25x⁶' }
                 },
                 {
-                    "q": {
-                        "ar": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">مسألة حسابية وتطبيق قانون</span><span class=\"q-law-pill\">📐 a² + bx + c = 0</span></div>حل المعادلة: a² + 7a - 18 = 0",
-                        "en": "<div class=\"q-meta-badges\"><span class=\"q-category-pill\">Applied Problem & Law</span><span class=\"q-law-pill\">📐 a² + bx + c = 0</span></div>Solve the equation: a² + 7a - 18 = 0"
-                    },
-                    "options": [
-                        {
-                            "ar": "a=9, a=-2",
-                            "en": "a=9, a=-2"
-                        },
-                        {
-                            "ar": "a=-9, a=2",
-                            "en": "a=-9, a=2"
-                        },
-                        {
-                            "ar": "a=6, a=-3",
-                            "en": "a=6, a=-3"
-                        },
-                        {
-                            "ar": "a=-6, a=3",
-                            "en": "a=-6, a=3"
-                        }
+                    q: { ar: 'بسّط: <span class="math-display">(-3/4 c)³</span>', en: 'Simplify: <span class="math-display">(-3/4 c)³</span>' },
+                    options: [
+                        { ar: '<span class="math-display">-27/64 c³</span>', en: '<span class="math-display">-27/64 c³</span>' },
+                        { ar: '<span class="math-display">27/64 c³</span>', en: '<span class="math-display">27/64 c³</span>' },
+                        { ar: '<span class="math-display">-9/12 c³</span>', en: '<span class="math-display">-9/12 c³</span>' },
+                        { ar: '<span class="math-display">-27/12 c³</span>', en: '<span class="math-display">-27/12 c³</span>' }
                     ],
-                    "correct": 1,
-                    "answer": {
-                        "ar": "نحلل المقدار إلى (a+9)(a-2)=0، إذن a=-9 أو a=2.",
-                        "en": "Factor to (a+9)(a-2)=0, so a=-9 or a=2."
-                    }
+                    correct: 0,
+                    answer: { ar: '(-3)³/4³ × c³ = -27/64 c³', en: '(-3)³/4³ × c³ = -27/64 c³' }
+                },
+                {
+                    q: { ar: 'بسّط: <span class="math-display">(8y³)(-3x²y²)(3/8 xy⁴)</span>', en: 'Simplify: <span class="math-display">(8y³)(-3x²y²)(3/8 xy⁴)</span>' },
+                    options: [
+                        { ar: '<span class="math-display">-9x³y⁹</span>', en: '<span class="math-display">-9x³y⁹</span>' },
+                        { ar: '<span class="math-display">9x³y⁹</span>', en: '<span class="math-display">9x³y⁹</span>' },
+                        { ar: '<span class="math-display">-9x²y⁹</span>', en: '<span class="math-display">-9x²y⁹</span>' },
+                        { ar: '<span class="math-display">-72x³y⁹</span>', en: '<span class="math-display">-72x³y⁹</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '8 × (-3) × 3/8 × x²⁺¹ × y³⁺²⁺⁴ = -9x³y⁹', en: '8 × (-3) × 3/8 × x²⁺¹ × y³⁺²⁺ = -9x³y⁹' }
+                },
+                {
+                    q: { ar: 'بسّط: <span class="math-display">(4/7 m)²(49m)(17p)(1/34 p⁵)</span>', en: 'Simplify: <span class="math-display">(4/7 m)²(49m)(17p)(1/34 p⁵)</span>' },
+                    options: [
+                        { ar: '<span class="math-display">8m³p⁶</span>', en: '<span class="math-display">8m³p⁶</span>' },
+                        { ar: '<span class="math-display">16m³p⁶</span>', en: '<span class="math-display">16m³p⁶</span>' },
+                        { ar: '<span class="math-display">8m²p⁶</span>', en: '<span class="math-display">8m²p⁶</span>' },
+                        { ar: '<span class="math-display">4m³p⁶</span>', en: '<span class="math-display">4m³p⁶</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '16/49 m² × 49m × 17p × 1/34 p = 16 × 1/2 × m³ × p⁶ = 8m³p⁶', en: '16/49 m² × 49m × 17p × 1/34 p⁵ = 16 × 1/2 × m³ × p = 8m³p⁶' }
                 }
             ]
         }
     ]
 };
-// =====================================================================
 
 function shuffleArray(array) {
     const arr = [...array];
-    for (let i = array.length - 1; i > 0; i--) {
+    for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(rng() * (i + 1));
         [arr[i], arr[j]] = [arr[j], arr[i]];
     }
@@ -1000,7 +752,7 @@ function reshuffleExam() {
     if (confirm(msg)) {
         currentSeed = Date.now(); timeRemaining = TOTAL_TIME; answersVisible = false;
         prepareShuffledExam(); renderExam(); saveState();
-        alert(currentLang === 'ar' ? '🎲 تم تغيير الأسئلة! حظاً موفقاً! 🍀' : '🎲 Questions changed! Good luck! 🍀');
+        alert(currentLang === 'ar' ? ' تم تغيير الأسئلة! حظاً موفقاً! ' : '🎲 Questions changed! Good luck! 🍀');
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 }
@@ -1009,10 +761,8 @@ function setLanguage(lang) {
     currentLang = lang;
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    const btnAr = document.getElementById('btn-ar');
-    const btnEn = document.getElementById('btn-en');
-    if (btnAr) btnAr.classList.toggle('active', lang === 'ar');
-    if (btnEn) btnEn.classList.toggle('active', lang === 'en');
+    document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
     document.body.classList.toggle('en-mode', lang === 'en');
     document.querySelectorAll('[data-ar][data-en]').forEach(el => {
         el.innerHTML = lang === 'ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
@@ -1022,26 +772,30 @@ function setLanguage(lang) {
 
 function renderExam() {
     const container = document.getElementById('exam-content');
-    if (!container) return;
     const labels = { ar: { option: ['أ', 'ب', 'ج', 'د'], answer: '✅ الإجابة:' }, en: { option: ['A', 'B', 'C', 'D'], answer: '✅ Answer:' } };
     const lbl = labels[currentLang]; const isRTL = currentLang === 'ar';
     let html = ''; let globalIdx = 0;
-    examData.sections.forEach((section) => {
-        html += `<section class="bg-white p-6 rounded-2xl shadow-lg border-2 border-teal-100">
-            <h2 class="text-xl font-bold mb-4 text-teal-700">${section.title[currentLang]}</h2>
+    examData.sections.forEach((section, secIdx) => {
+        const badgeClass = ['module-1', 'module-2', 'module-3', 'module-4', 'module-5'][secIdx];
+        html += `<section class="bg-white p-6 rounded-2xl shadow-lg border-2 border-cyan-100">
+            <div class="text-center mb-4"><span class="module-badge ${badgeClass}">${section.title[currentLang]}</span></div>
             <ol class="space-y-4 text-sm">`;
         section.questions.forEach((q) => {
             const bs = isRTL ? 'border-r-4 pr-4' : 'border-l-4 pl-4';
-            html += `<li class="${bs} border-teal-400 py-2" id="q-${globalIdx}">
-                <strong>${globalIdx + 1}.</strong> ${q.q[currentLang]}<br>`;
+            html += `<li class="${bs} border-cyan-400 py-2" id="q-${globalIdx}">
+                <strong class="text-cyan-700">${globalIdx + 1}.</strong> <span class="arabic-math">${q.q[currentLang]}</span><br>`;
+            if (q.svg) html += `<div class="graph-container">${q.svg}</div>`;
             q.options.forEach((opt, oIdx) => {
                 const rs = isRTL ? 'mr-4 ml-2' : 'ml-4 mr-2';
-                html += `<label class="cursor-pointer block mt-1 ${isRTL ? 'mr-4' : 'ml-4'} hover:bg-teal-50 rounded-lg p-1 transition">
+                html += `<label class="cursor-pointer block mt-2 ${isRTL ? 'mr-4' : 'ml-4'} hover:bg-cyan-50 rounded-lg p-2 transition">
                     <input type="radio" name="q${globalIdx}" value="${String.fromCharCode(97 + oIdx)}" class="${rs}">
-                    ${lbl.option[oIdx]}) ${opt[currentLang]}</label>`;
+                    <span class="arabic-math">${lbl.option[oIdx]}) ${opt[currentLang]}</span>
+                </label>`;
             });
-            html += `<div class="answer-box text-green-700 mt-2 font-medium ${answersVisible ? '' : 'hidden'} bg-green-50 rounded-lg p-2">
-                ${lbl.answer} ${lbl.option[q.correct]}) ${q.options[q.correct][currentLang]} — ${q.answer[currentLang]}</div></li>`;
+            html += `<div class="answer-box text-green-700 mt-3 font-medium ${answersVisible ? '' : 'hidden'} bg-green-50 rounded-lg p-3 border border-green-200">
+                ${lbl.answer} ${lbl.option[q.correct]}) <span class="arabic-math">${q.options[q.correct][currentLang]}</span><br>
+                <span class="text-sm text-green-700 mt-2 block arabic-math">${q.answer[currentLang]}</span>
+            </div></li>`;
             globalIdx++;
         });
         html += `</ol></section>`;
@@ -1051,12 +805,10 @@ function renderExam() {
 
 function startTimer() {
     updateTimerDisplay();
-    if (timerInterval) clearInterval(timerInterval);
     timerInterval = setInterval(() => {
         timeRemaining--; updateTimerDisplay();
         if (timeRemaining % 60 === 0) saveState(false);
-        const timerEl = document.getElementById('timer');
-        if (timerEl && timeRemaining <= 600) timerEl.classList.add('timer-warning');
+        if (timeRemaining <= 600) document.getElementById('timer').classList.add('timer-warning');
         if (timeRemaining <= 0) {
             clearInterval(timerInterval);
             alert(currentLang === 'ar' ? "⏰ انتهى الوقت!" : "⏰ Time's up!");
@@ -1067,8 +819,7 @@ function startTimer() {
 
 function updateTimerDisplay() {
     const m = Math.floor(timeRemaining / 60); const s = timeRemaining % 60;
-    const timerEl = document.getElementById('timer');
-    if (timerEl) timerEl.textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    document.getElementById('timer').textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
 }
 
 function toggleAnswers() {
@@ -1085,86 +836,66 @@ function gradeExam() {
         const li = document.getElementById(`q-${i}`);
         if (li) {
             const isCorrect = sel && sel.value === correctAnswersMap[i];
-            if (isCorrect) { 
-                correctCount++; 
-                li.classList.add('correct'); 
-                li.classList.remove('incorrect'); 
-                const secIdx = Math.min(TOTAL_SECTIONS - 1, Math.floor(i / Math.max(1, QUESTIONS_PER_SECTION)));
-                if (sectionScores[secIdx] !== undefined) sectionScores[secIdx]++; 
-            }
+            if (isCorrect) { correctCount++; li.classList.add('correct'); li.classList.remove('incorrect'); sectionScores[Math.floor(i / QUESTIONS_PER_SECTION)]++; }
             else { li.classList.add('incorrect'); li.classList.remove('correct'); }
         }
     }
-    const score = TOTAL_QUESTIONS > 0 ? Math.round((correctCount / TOTAL_QUESTIONS) * 100) : 0;
-    const resTotal = document.getElementById('res-total');
-    if (resTotal) resTotal.textContent = `${score} / 100`;
-    const resName = document.getElementById('res-name');
-    if (resName) resName.textContent = document.getElementById('studentName')?.value || (currentLang === 'ar' ? 'بطل' : 'Champion');
-    const resDate = document.getElementById('res-date');
-    if (resDate) resDate.textContent = new Date().toLocaleDateString(currentLang === 'ar' ? 'ar-AE' : 'en-US');
-    const pc = document.getElementById('sections-performance');
-    if (pc) {
-        pc.innerHTML = '';
-        examData.sections.forEach((s, idx) => {
-            const secQCount = originalExamData.sections[idx]?.questions.length || QUESTIONS_PER_SECTION;
-            pc.innerHTML += `<div class="flex justify-between items-center"><span class="text-gray-700">${s.title[currentLang]}</span><span class="font-bold text-teal-700">${sectionScores[idx] || 0}/${secQCount}</span></div>`;
-        });
-    }
+    const score = Math.round((correctCount / TOTAL_QUESTIONS) * 100);
+    document.getElementById('res-total').textContent = `${score} / 100`;
+    document.getElementById('res-name').textContent = document.getElementById('studentName').value || (currentLang === 'ar' ? 'بطل' : 'Champion');
+    document.getElementById('res-date').textContent = new Date().toLocaleDateString(currentLang === 'ar' ? 'ar-AE' : 'en-US');
+    const pc = document.getElementById('sections-performance'); pc.innerHTML = '';
+    examData.sections.forEach((s, idx) => {
+        pc.innerHTML += `<div class="flex justify-between items-center p-3 bg-white rounded-lg"><span class="text-gray-700">${s.title[currentLang]}</span><span class="font-bold text-cyan-700">${sectionScores[idx]}/${QUESTIONS_PER_SECTION}</span></div>`;
+    });
     const badge = document.getElementById('success-badge');
-    const successPercent = document.getElementById('success-percent');
-    if (successPercent) successPercent.textContent = `${score}%`;
-    if (badge) {
-        if (currentLang === 'ar') {
-            if (score >= 90) { badge.textContent = '🌟 ممتاز جداً!'; badge.className = 'success-badge grade-excellent'; }
-            else if (score >= 75) { badge.textContent = '👏 ممتاز!'; badge.className = 'success-badge grade-good'; }
-            else if (score >= 50) { badge.textContent = '👍 جيد'; badge.className = 'success-badge grade-pass'; }
-            else { badge.textContent = '💪 حاول مرة أخرى'; badge.className = 'success-badge grade-fail'; }
-        } else {
-            if (score >= 90) { badge.textContent = '🌟 Outstanding!'; badge.className = 'success-badge grade-excellent'; }
-            else if (score >= 75) { badge.textContent = '👏 Excellent!'; badge.className = 'success-badge grade-good'; }
-            else if (score >= 50) { badge.textContent = '👍 Good'; badge.className = 'success-badge grade-pass'; }
-            else { badge.textContent = '💪 Try Again'; badge.className = 'success-badge grade-fail'; }
-        }
+    document.getElementById('success-percent').textContent = `${score}%`;
+    if (currentLang === 'ar') {
+        if (score >= 90) { badge.textContent = ' ممتاز جداً!'; badge.className = 'success-badge grade-excellent'; }
+        else if (score >= 75) { badge.textContent = '👏 ممتاز!'; badge.className = 'success-badge grade-good'; }
+        else if (score >= 50) { badge.textContent = '👍 جيد'; badge.className = 'success-badge grade-pass'; }
+        else { badge.textContent = '💪 حاول مرة أخرى'; badge.className = 'success-badge grade-fail'; }
+    } else {
+        if (score >= 90) { badge.textContent = '🌟 Outstanding!'; badge.className = 'success-badge grade-excellent'; }
+        else if (score >= 75) { badge.textContent = '👏 Excellent!'; badge.className = 'success-badge grade-good'; }
+        else if (score >= 50) { badge.textContent = ' Good'; badge.className = 'success-badge grade-pass'; }
+        else { badge.textContent = '💪 Try Again'; badge.className = 'success-badge grade-fail'; }
     }
-    const resultsPanel = document.getElementById('results-panel');
-    if (resultsPanel) {
-        resultsPanel.classList.remove('hidden');
-        resultsPanel.scrollIntoView({ behavior: 'smooth' });
-    }
+    document.getElementById('results-panel').classList.remove('hidden');
+    document.getElementById('results-panel').scrollIntoView({ behavior: 'smooth' });
     if (timerInterval) clearInterval(timerInterval);
 }
 
 function sendResultsToEmail() {
     const btn = document.getElementById('sendEmailBtn');
     const status = document.getElementById('emailStatus');
-    if (!btn || !status) return;
     btn.disabled = true;
     btn.textContent = currentLang === 'ar' ? '⏳ جاري الإرسال...' : '⏳ Sending...';
-    const name = document.getElementById('studentName')?.value || 'N/A';
-    const studentClass = document.getElementById('studentClass')?.value || 'N/A';
-    const date = document.getElementById('examDate')?.value || new Date().toLocaleDateString();
-    const score = document.getElementById('res-total')?.textContent || '0 / 100';
-    const successRate = document.getElementById('success-percent')?.textContent || '0%';
-    const badge = document.getElementById('success-badge')?.textContent || '-';
+    const name = document.getElementById('studentName').value || 'N/A';
+    const studentClass = document.getElementById('studentClass').value || 'N/A';
+    const date = document.getElementById('examDate').value || new Date().toLocaleDateString();
+    const score = document.getElementById('res-total').textContent;
+    const successRate = document.getElementById('success-percent').textContent;
+    const badge = document.getElementById('success-badge').textContent;
     let questionsHTML = ''; let globalIdx = 0;
     examData.sections.forEach((section, sectionIdx) => {
-        questionsHTML += `<tr style="background:linear-gradient(135deg,#0d9488,#0f766e);color:white;"><td colspan="5" style="padding:12px;font-weight:bold;">📌 ${currentLang==='ar'?'القسم':'Section'} ${sectionIdx+1}: ${section.title[currentLang]}</td></tr>`;
+        questionsHTML += `<tr style="background:linear-gradient(135deg,#0891b2,#0e7490);color:white;"><td colspan="5" style="padding:12px;font-weight:bold;">📌 ${currentLang==='ar'?'القسم':'Section'} ${sectionIdx+1}: ${section.title[currentLang]}</td></tr>`;
         section.questions.forEach((q) => {
             const sel = document.querySelector(`input[name="q${globalIdx}"]:checked`);
             const sv = sel ? sel.value : null; const cv = correctAnswersMap[globalIdx]; const ic = sv === cv;
             let sat = currentLang==='ar'?'❌ لم يجب':'❌ No answer'; let sac = '#dc2626';
-            if (sv) { const si = sv.charCodeAt(0)-97; sat = q.options[si] ? q.options[si][currentLang] : 'N/A'; sac = ic?'#059669':'#dc2626'; }
-            const cat = q.options[q.correct] ? q.options[q.correct][currentLang] : 'N/A';
+            if (sv) { const si = sv.charCodeAt(0)-97; sat = q.options[si][currentLang]; sac = ic?'#059669':'#dc2626'; }
+            const cat = q.options[q.correct][currentLang];
             const rb = ic?'#f0fdf4':'#fef2f2'; const bl = ic?'4px solid #10b981':'4px solid #ef4444';
-            questionsHTML += `<tr style="background:${rb};border-right:${bl};"><td style="padding:10px;border:1px solid #e5e7eb;text-align:center;font-weight:bold;">${globalIdx+1}</td><td style="padding:10px;border:1px solid #e5e7eb;"><strong style="color:#0f766e;">${currentLang==='ar'?'❓ السؤال:':'❓ Question:'}</strong><br><span style="font-size:13px;">${q.q[currentLang]}</span></td><td style="padding:10px;border:1px solid #e5e7eb;"><strong style="color:${sac};">${currentLang==='ar'?'✍️ إجابة الطالب:':'✍️ Student:'}</strong><br><span style="color:${sac};font-size:13px;">${sat}</span></td><td style="padding:10px;border:1px solid #e5e7eb;"><strong style="color:#059669;">${currentLang==='ar'?'✅ الصحيحة:':'✅ Correct:'}</strong><br><span style="color:#059669;font-size:13px;">${cat}</span></td><td style="padding:10px;border:1px solid #e5e7eb;text-align:center;">${ic?'<span style="font-size:24px;">✅</span>':'<span style="font-size:24px;">❌</span>'}</td></tr>`;
+            questionsHTML += `<tr style="background:${rb};border-right:${bl};"><td style="padding:10px;border:1px solid #e5e7eb;text-align:center;font-weight:bold;">${globalIdx+1}</td><td style="padding:10px;border:1px solid #e5e7eb;"><strong style="color:#0e7490;">${currentLang==='ar'?' السؤال:':'❓ Question:'}</strong><br><span style="font-size:13px;">${q.q[currentLang]}</span></td><td style="padding:10px;border:1px solid #e5e7eb;"><strong style="color:${sac};">${currentLang==='ar'?'✍️ إجابة الطالب:':'✍️ Student:'}</strong><br><span style="color:${sac};font-size:13px;">${sat}</span></td><td style="padding:10px;border:1px solid #e5e7eb;"><strong style="color:#059669;">${currentLang==='ar'?'✅ الصحيحة:':'✅ Correct:'}</strong><br><span style="color:#059669;font-size:13px;">${cat}</span></td><td style="padding:10px;border:1px solid #e5e7eb;text-align:center;">${ic?'<span style="font-size:24px;">✅</span>':'<span style="font-size:24px;">❌</span>'}</td></tr>`;
             globalIdx++;
         });
     });
-    const answersHTML = `<div style="font-family:'Segoe UI',Tahoma,Arial;direction:${currentLang==='ar'?'rtl':'ltr'};"><div style="background:linear-gradient(135deg,#0d9488,#0f766e);color:white;padding:20px;border-radius:10px 10px 0 0;text-align:center;"><h2 style="margin:0;">${currentLang==='ar'?'نتيجة الامتحان':'Exam Result'}</h2><p style="margin:5px 0 0;opacity:0.9;">${currentLang==='ar'?'تقرير تفصيلي':'Detailed Report'}</p></div><div style="background:#f0fdfa;padding:15px;"><table style="width:100%;border-collapse:collapse;"><tr><td style="padding:8px;font-weight:bold;color:#0f766e;">${currentLang==='ar'?'😊 الاسم:':'😊 Name:'}</td><td style="padding:8px;">${name}</td><td style="padding:8px;font-weight:bold;color:#0f766e;">${currentLang==='ar'?'🏫 الشعبة:':'🏫 Class:'}</td><td style="padding:8px;">${studentClass}</td></tr><tr><td style="padding:8px;font-weight:bold;color:#0f766e;">${currentLang==='ar'?'📅 التاريخ:':'📅 Date:'}</td><td style="padding:8px;">${date}</td><td style="padding:8px;font-weight:bold;color:#0f766e;">${currentLang==='ar'?'🏆 التقدير:':'🏆 Grade:'}</td><td style="padding:8px;">${badge}</td></tr></table></div><div style="background:white;padding:20px;text-align:center;"><div style="display:inline-block;margin:0 15px;"><div style="font-size:32px;font-weight:bold;color:#0d9488;">${score}</div><div style="color:#6b7280;font-size:13px;">${currentLang==='ar'?'الدرجة':'Score'}</div></div><div style="display:inline-block;margin:0 15px;"><div style="font-size:32px;font-weight:bold;color:#059669;">${successRate}%</div><div style="color:#6b7280;font-size:13px;">${currentLang==='ar'?'النسبة':'Rate'}</div></div></div><table style="width:100%;border-collapse:collapse;font-size:13px;"><thead><tr style="background:#0d9488;color:white;"><th style="padding:10px;border:1px solid #0f766e;">#</th><th style="padding:10px;border:1px solid #0f766e;">${currentLang==='ar'?'السؤال':'Question'}</th><th style="padding:10px;border:1px solid #0f766e;">${currentLang==='ar'?'إجابة الطالب':'Student'}</th><th style="padding:10px;border:1px solid #0f766e;">${currentLang==='ar'?'الصحيحة':'Correct'}</th><th style="padding:10px;border:1px solid #0f766e;">${currentLang==='ar'?'النتيجة':'Result'}</th></tr></thead><tbody>${questionsHTML}</tbody></table><div style="background:linear-gradient(135deg,#f0fdfa,#ccfbf1);padding:15px;border-radius:0 0 10px 10px;"><p style="margin:0;color:#0f766e;text-align:center;">📐 <strong>${currentLang==='ar'?'أحسنت يا بطل!':'Great job!'}</strong> 📐</p><p style="margin:5px 0 0;color:#0f766e;text-align:center;font-size:12px;">${currentLang==='ar'?'تم الإرسال تلقائياً | Mr. Mohammed Hesham':'Auto-sent | Mr. Mohammed Hesham'}</p></div></div>`;
+    const answersHTML = `<div style="font-family:'Segoe UI',Tahoma,Arial;direction:${currentLang==='ar'?'rtl':'ltr'};"><div style="background:linear-gradient(135deg,#0891b2,#0e7490);color:white;padding:20px;border-radius:10px 10px 0 0;text-align:center;"><h2 style="margin:0;">📐 ${currentLang==='ar'?'نتيجة امتحان التبسيط وقوانين الأسس':'Simplification & Exponents Exam Result'}</h2><p style="margin:5px 0 0;opacity:0.9;">Grade 10 General - Mathematics</p></div><div style="background:#ecfeff;padding:15px;"><table style="width:100%;border-collapse:collapse;"><tr><td style="padding:8px;font-weight:bold;color:#0e7490;">${currentLang==='ar'?'😊 الاسم:':'😊 Name:'}</td><td style="padding:8px;">${name}</td><td style="padding:8px;font-weight:bold;color:#0e7490;">${currentLang==='ar'?'🏫 الشعبة:':'🏫 Class:'}</td><td style="padding:8px;">${studentClass}</td></tr><tr><td style="padding:8px;font-weight:bold;color:#0e7490;">${currentLang==='ar'?'📅 التاريخ:':'📅 Date:'}</td><td style="padding:8px;">${date}</td><td style="padding:8px;font-weight:bold;color:#0e7490;">${currentLang==='ar'?' التقدير:':'🏆 Grade:'}</td><td style="padding:8px;">${badge}</td></tr></table></div><div style="background:white;padding:20px;text-align:center;"><div style="display:inline-block;margin:0 15px;"><div style="font-size:32px;font-weight:bold;color:#0891b2;">${score}</div><div style="color:#6b7280;font-size:13px;">${currentLang==='ar'?'الدرجة':'Score'}</div></div><div style="display:inline-block;margin:0 15px;"><div style="font-size:32px;font-weight:bold;color:#059669;">${successRate}%</div><div style="color:#6b7280;font-size:13px;">${currentLang==='ar'?'النسبة':'Rate'}</div></div></div><table style="width:100%;border-collapse:collapse;font-size:13px;"><thead><tr style="background:#0891b2;color:white;"><th style="padding:10px;border:1px solid #0e7490;">#</th><th style="padding:10px;border:1px solid #0e7490;">${currentLang==='ar'?'السؤال':'Question'}</th><th style="padding:10px;border:1px solid #0e7490;">${currentLang==='ar'?'إجابة الطالب':'Student'}</th><th style="padding:10px;border:1px solid #0e7490;">${currentLang==='ar'?'الصحيحة':'Correct'}</th><th style="padding:10px;border:1px solid #0e7490;">${currentLang==='ar'?'النتيجة':'Result'}</th></tr></thead><tbody>${questionsHTML}</tbody></table><div style="background:linear-gradient(135deg,#ecfeff,#cffafe);padding:15px;border-radius:0 0 10px 10px;"><p style="margin:0;color:#0e7490;text-align:center;">📐 <strong>${currentLang==='ar'?'أحسنت يا بطل! استمر في إتقان الرياضيات!':'Great job! Keep mastering Mathematics!'}</strong> 📐</p><p style="margin:5px 0 0;color:#0e7490;text-align:center;font-size:12px;">${currentLang==='ar'?'تم الإرسال تلقائياً | Mr. Mohammed Hesham':'Auto-sent | Mr. Mohammed Hesham'}</p></div></div>`;
     emailjs.send(SERVICE_ID, TEMPLATE_ID, { to_email: TARGET_EMAIL, student_name: name, student_class: studentClass, exam_date: date, total_score: score, success_rate: successRate, grade: badge, answers_table: answersHTML }).then(() => {
         status.textContent = currentLang==='ar'?'✅ تم الإرسال بنجاح!':'✅ Sent successfully!'; status.style.color = '#059669'; btn.textContent = currentLang==='ar'?'✓ تم':'✓ Sent';
     }).catch(err => {
-        status.textContent = currentLang==='ar'?'❌ حدث خطأ':'❌ Error'; status.style.color = '#dc2626'; btn.disabled = false; btn.textContent = currentLang==='ar'?'📧 حاول مرة أخرى':'📧 Try Again'; console.error(err);
+        status.textContent = currentLang==='ar'?'❌ حدث خطأ':'❌ Error'; status.style.color = '#dc2626'; btn.disabled = false; btn.textContent = currentLang==='ar'?' حاول مرة أخرى':'📧 Try Again'; console.error(err);
     });
 }
 
@@ -1176,18 +907,16 @@ window.addEventListener('DOMContentLoaded', () => {
         answersVisible = saved.answersVisible || false;
         document.documentElement.lang = currentLang;
         document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-        const btnAr = document.getElementById('btn-ar');
-        const btnEn = document.getElementById('btn-en');
-        if (btnAr) btnAr.classList.toggle('active', currentLang === 'ar');
-        if (btnEn) btnEn.classList.toggle('active', currentLang === 'en');
+        document.getElementById('btn-ar').classList.toggle('active', currentLang === 'ar');
+        document.getElementById('btn-en').classList.toggle('active', currentLang === 'en');
         document.body.classList.toggle('en-mode', currentLang === 'en');
         document.querySelectorAll('[data-ar][data-en]').forEach(el => { el.innerHTML = currentLang === 'ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en'); });
     } else { currentSeed = Date.now(); }
     prepareShuffledExam(); renderExam();
     if (saved) {
-        if (saved.studentName) { const el = document.getElementById('studentName'); if (el) el.value = saved.studentName; }
-        if (saved.studentClass) { const el = document.getElementById('studentClass'); if (el) el.value = saved.studentClass; }
-        if (saved.examDate) { const el = document.getElementById('examDate'); if (el) el.value = saved.examDate; }
+        if (saved.studentName) document.getElementById('studentName').value = saved.studentName;
+        if (saved.studentClass) document.getElementById('studentClass').value = saved.studentClass;
+        if (saved.examDate) document.getElementById('examDate').value = saved.examDate;
         if (saved.answers) restoreAnswers(saved.answers);
     }
     setupAnswerListeners(); setupInputListeners(); startTimer();
